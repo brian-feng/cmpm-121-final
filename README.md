@@ -18,3 +18,5 @@ Tools & Materials:
 Outlook:
   We’re hoping to learn more about creating games in a group setting and becoming familiar with using these tools with multiple people. I think the hardest and riskiest part of the project is coordinating our coding. Some of our parts of the project relies on a teammate’s code. We also cannot have 2 people working on the same part of the project otherwise conflicts may occur.
   For a spin on our game, we were thinking we would take the general game loop and turn it into a deck builder. We would start out with a base pack of cards and a small grid and as the player progresses they unlock new seeds to obtain. While we would maintain the general game loop of a person going over tile-grids and planting, the player-view would be top down with a hand of cards at the bottom of the screen. To play a hand the player will move around and place a selected card on the open grid, which would apply to the ground in front of them.
+
+Team Doc: https://docs.google.com/document/d/1qyKcXH9KJ7UZ8W7sGVgps3pKDIWqvS7It9jn5EqXCmw/edit?usp=sharing
