@@ -7,12 +7,19 @@ public class LevelGeneration : MonoBehaviour
     public int levelWidth;
     public int levelHeight;
 
+    public GameObject[][] tileGrid;
+
     public GameObject grassTile;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        tileGrid = new GameObject[levelWidth][];
+        for (int i = 0; i < levelWidth; i++)
+        {
+            tileGrid[i] = new GameObject[levelHeight];
+        }
         generateInitialLevel();
     }
 
@@ -24,15 +31,18 @@ public class LevelGeneration : MonoBehaviour
 
     void generateInitialLevel(){
         GameObject grassParent = GameObject.Find("Grass");
-        for (int i = levelWidth / 2 * -1; i < levelWidth / 2; i++)
+        for (int i = 0; i < levelWidth; i++)
         {
-            for (int j = levelHeight / 2 * -1; j < levelHeight / 2; j++)
+            for (int j = 0; j < levelHeight; j++)
             {
                 GameObject cube = Instantiate(grassTile);
-                cube.transform.position = new Vector3(i, j, 0);
+                cube.transform.position = transform.position + new Vector3(i, j, 0);
                 cube.transform.parent = grassParent.transform;
+                tileGrid[i][j] = cube;
             }
         }
+        //Just to test the grid system. We will remove this later
+        tileGrid[4][3].GetComponent<TileScript>().fertilizeTile();
     }
 
 
