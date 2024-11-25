@@ -1,5 +1,7 @@
 {
-    "recommendations": [
-      "visualstudiotoolsforunity.vstuc"
-    ]
+  "recommendations": [
+    "denoland.vscode-deno",
+    "github.copilot"
+  ],
+  "unwantedRecommendations": []
 }
