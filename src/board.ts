@@ -1,9 +1,7 @@
 import generateRandomInt from "./random.ts";
 import Plant from "./plant.ts";
-interface Position {
-  x: number;
-  y: number;
-}
+import Position from "./position.ts";
+
 const SPACEWIDTH: number = 50;
 const SPACEHEIGHT: number = 50;
 export default class Board {

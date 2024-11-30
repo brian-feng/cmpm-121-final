@@ -1,7 +1,13 @@
-interface Position {
-  x: number;
-  y: number;
-}
+import Position from "./position.ts";
+
+// export default class PlantType {
+// future plans
+// to select plant type
+// the other plant will be normal class
+// this is so that you can instantiate species with one class
+// in the other class, the boardspace will instantiate it and
+// automatically plant it on instantiation
+// }
 
 export default class Plant {
   color: string;

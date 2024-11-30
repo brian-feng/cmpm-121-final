@@ -1,6 +1,8 @@
 import "./style.css";
 import Board from "./board.ts";
 import Plant from "./plant.ts";
+import Player from "./player.ts";
+
 // Select or create the container where the button will be added
 const container = document.getElementById("app") || document.body;
 const canvas = document.createElement("canvas");
@@ -8,11 +10,6 @@ const canvas = document.createElement("canvas");
 canvas.width = 1280;
 canvas.height = 720;
 container.appendChild(canvas);
-// Setting up interfaces
-interface Position {
-  x: number;
-  y: number;
-}
 
 const currentPlantChange = new Event("current-plant-changed");
 const plantSpecies: Plant[] = [
@@ -31,37 +28,10 @@ plantSpecies.map((plant) => {
   container.appendChild(button);
 });
 
-const image = new Image();
-image.src =
-  "https://www.pikpng.com/pngl/b/234-2345936_kawaii-pixel-ghost-stickers-messages-sticker-2-plain.png";
-class Player {
-  position: Position = { x: 0, y: 0 };
-
-  move(ctx: CanvasRenderingContext2D, x: number, y: number) {
-    // TODO: refactor!!
-    const prevSpace = board.getSpace(this.position);
-    this.position.x += x;
-    this.position.y += y;
-    const newSpace = board.getSpace(this.position);
-    if (prevSpace && newSpace) {
-      prevSpace.refreshSpace(ctx);
-      console.log("playerPos: ", this.position);
-      this.draw(ctx, newSpace.position);
-    } else {
-      this.position.x -= x;
-      this.position.y -= y;
-    }
-  }
-
-  draw(ctx: CanvasRenderingContext2D, pos: Position) {
-    ctx.drawImage(image, pos.x, pos.y, board.width, board.height);
-  }
-}
-
 // Setting Up Board and Player
 const board = new Board(canvas);
 const ctx = canvas.getContext("2d");
-const player = new Player();
+const player = new Player(board);
 let currentPlant: Plant = plantSpecies[0];
 
 if (ctx) {
