@@ -28,6 +28,9 @@ export default class Player {
   }
 
   draw(ctx: CanvasRenderingContext2D, pos: Position) {
-    ctx.drawImage(image, pos.x, pos.y, this.board.width, this.board.height);
+    // image wasn't working so temporarily the player is a black square
+    //ctx.drawImage(image, pos.x, pos.y, this.board.width, this.board.height);
+    ctx.fillStyle="black";
+    ctx.fillRect(pos.x, pos.y, this.board.width, this.board.height);
   }
 }

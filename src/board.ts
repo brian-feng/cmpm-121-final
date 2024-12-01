@@ -25,6 +25,16 @@ export default class Board {
     this.spaces.forEach((row) => row.forEach((space) => space.draw(ctx)));
   }
 
+  advanceTime(ctx: CanvasRenderingContext2D) {
+    this.spaces.forEach((row) => 
+      row.forEach((space) => {
+        // There is an advanceTime function for each space
+        space.advanceTime(ctx);
+      })
+    );
+  }
+  
+
   getSpace(pos: Position) {
     console.log("position: ", pos);
     if (this.spaces[pos.x] && this.spaces[pos.x][pos.y] !== undefined) {
@@ -70,13 +80,44 @@ class BoardSpace {
 
   placeHere(ctx: CanvasRenderingContext2D, plant: Plant) {
     this._inventory.push(plant);
-    plant.draw(ctx, this.position, this._width, this._height);
+    this.cropLevel = 1;
+    plant.draw(ctx, this.position, this._width, this._height, this.cropLevel);
   }
 
   refreshSpace(ctx: CanvasRenderingContext2D) {
     this.draw(ctx);
     for (const item of this._inventory) {
-      item.draw(ctx, this.position, this._width, this._height);
+      item.draw(ctx, this.position, this._width, this._height, this.cropLevel);
     }
   }
+
+
+  //This function will need to be edited.
+  // Currently every plant just "levels" without any input.
+  // We need to account for water/sun/nearby plants
+  // We also need to update incoming water and sun to be randomly changed each turn
+  advanceTime(ctx: CanvasRenderingContext2D) {
+    // Increase the level of the crops on this plot
+    for (const item of this._inventory) {
+      if (this.cropLevel < 3 && this.cropLevel > 0) {
+        this.cropLevel++;
+      }
+      // Redraw only the plant without resetting the space
+      item.draw(ctx, this.position, this._width, this._height, this.cropLevel);
+    }
+  }
+
+  getPlants() {
+    return this._inventory;
+  }
+
+  getWidth(){
+    return this._width;
+  }
+
+  getHeight(){
+    return this._height;
+  }
+  
+
 }

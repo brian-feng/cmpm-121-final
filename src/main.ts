@@ -3,13 +3,34 @@ import Board from "./board.ts";
 import Plant from "./plant.ts";
 import Player from "./player.ts";
 
-// Select or create the container where the button will be added
+// Create the wrapper container
 const container = document.getElementById("app") || document.body;
-const canvas = document.createElement("canvas");
+const wrapper = document.createElement("div");
+wrapper.style.display = "flex";
+wrapper.style.flexDirection = "column";
+wrapper.style.alignItems = "center";
+container.appendChild(wrapper);
+
 // Set up canvas
+const canvas = document.createElement("canvas");
 canvas.width = 1280;
 canvas.height = 720;
-container.appendChild(canvas);
+wrapper.appendChild(canvas);
+
+// Show current plant
+const currentPlantText = document.createElement("p");
+currentPlantText.textContent = "Current Plant: None";
+currentPlantText.style.marginTop = "10px";
+currentPlantText.style.fontSize = "18px";
+currentPlantText.style.fontWeight = "bold";
+wrapper.appendChild(currentPlantText);
+
+// Create a button container
+const buttonContainer = document.createElement("div");
+buttonContainer.style.display = "flex";
+buttonContainer.style.justifyContent = "center";
+buttonContainer.style.marginTop = "10px";
+wrapper.appendChild(buttonContainer);
 
 const currentPlantChange = new Event("current-plant-changed");
 const plantSpecies: Plant[] = [
@@ -21,11 +42,13 @@ const plantSpecies: Plant[] = [
 plantSpecies.map((plant) => {
   const button = document.createElement("button");
   button.innerHTML = plant.name;
+  button.style.margin = "5px";
   button.addEventListener("click", () => {
     dispatchEvent(currentPlantChange);
     currentPlant = plant;
+    currentPlantText.textContent = "Current Plant: " + plant.name;
   });
-  container.appendChild(button);
+  buttonContainer.appendChild(button);
 });
 
 // Setting Up Board and Player
@@ -34,12 +57,16 @@ const ctx = canvas.getContext("2d");
 const player = new Player(board);
 let currentPlant: Plant = plantSpecies[0];
 
+// Set initial current plant text
+currentPlantText.textContent = "Current Plant: " + currentPlant.name;
+
 if (ctx) {
   board.draw(ctx);
   player.draw(ctx, { x: 0, y: 0 });
 }
 
 // Handle player movement
+
 document.addEventListener("keydown", (event) => {
   if (ctx) {
     switch (event.key) {
@@ -55,9 +82,43 @@ document.addEventListener("keydown", (event) => {
       case "ArrowRight":
         player.move(ctx, 1, 0);
         break;
-      case " ":
-        board.getSpace(player.position)?.placeHere(ctx, currentPlant);
+      case "w":
+        player.move(ctx, 0, -1);
         break;
+      case "a":
+        player.move(ctx, -1, 0);
+        break;
+      case "s":
+        player.move(ctx, 0, 1);
+        break;
+      case "d":
+        player.move(ctx, 1, 0);
+        break;
+      case " ":
+        event.preventDefault(); // Prevent the default spacebar action (scrolling, etc.)
+        if(board.getSpace(player.position)?.getPlants().length == 0) {
+          board.getSpace(player.position)?.placeHere(ctx, currentPlant);
+        }
+        break;
+    }
+
+    //draw plant here
+    const space = board.getSpace(player.position);
+    if (space) {
+      space.getPlants().forEach((plant) => {
+        plant.draw(ctx, space.position, space.getWidth(), space.getHeight(), space.cropLevel);
+      });
     }
   }
 });
+
+
+// Advance time
+const timeButton = document.createElement("button");
+timeButton.innerHTML = "Advance Time";
+timeButton.addEventListener("click", () => {
+  if(ctx){
+    board.advanceTime(ctx);
+  }
+});
+wrapper.appendChild(timeButton);

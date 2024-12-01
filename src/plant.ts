@@ -18,13 +18,36 @@ export default class Plant {
   }
   placePlant() {
   }
-  draw(ctx: CanvasRenderingContext2D, pos: Position, w: number, h: number) {
+  draw(ctx: CanvasRenderingContext2D, pos: Position, w: number, h: number, level: number) {
     ctx.fillStyle = this.color;
+  
+    // Calculate the plant size based on the level
+    let sizePercentage = 0;
+    switch (level) {
+      case 1:
+        sizePercentage = 0.4; // 40%
+        break;
+      case 2:
+        sizePercentage = 0.6; // 60%
+        break;
+      case 3:
+        sizePercentage = 0.8; // 80%
+        break;
+      default:
+        sizePercentage = 0.4; // Default to level 1 if the level is invalid
+    }
+  
+    // Width and height based on %
+    const newWidth = w * sizePercentage;
+    const newHeight = h * sizePercentage;
+  
+    // Center the plant within the space
     ctx.fillRect(
-      pos.x + w / 4,
-      pos.y + h / 4,
-      w / 2,
-      h / 2,
+      pos.x + (w - newWidth) / 2,  // Horizontal center alignment
+      pos.y + (h - newHeight) / 2, // Vertical center alignment
+      newWidth,
+      newHeight
     );
   }
+  
 }
