@@ -13,9 +13,9 @@ export default class Board {
       const row: BoardSpace[] = [];
       for (let y = 0; y < canvas.height - this.height; y += this.height + 1) {
         // Select a random color
-        const color = Math.random() > 0.5 ? "green" : "aqua";
+        const color = Math.random() > 0.5 ? "green" : "lightgreen";
         const newPosition = { x: x, y: y };
-        row.push(new BoardSpace(newPosition, color, this.width, this.height));
+        row.push(new BoardSpace(newPosition, color, this.width, this.height, this));
       }
       this.spaces.push(row);
     }
@@ -32,6 +32,20 @@ export default class Board {
         space.advanceTime(ctx);
       })
     );
+  }
+
+  getLevel3Plants() {
+    //Get count of level 3 plants and return as int
+    let count: number = 0;
+    this.spaces.forEach((row) => 
+      row.forEach((space) => {
+        if (space.cropLevel == 3) {
+          count++;
+        }
+      }
+    )
+    );
+    return count;
   }
   
 
@@ -50,10 +64,12 @@ class BoardSpace {
   private _width: number;
   private _height: number;
   private _inventory: Array<Plant> = [];
+  private _boardReference: Board;
 
   sunlightLevel: number = generateRandomInt(0, 3);
   // after a turn sunlight should be lost
   waterLevel: number = generateRandomInt(0, 3);
+  plantXP: number = 0;
   cropLevel: number = 0;
   harvestable: boolean = false;
 
@@ -62,11 +78,14 @@ class BoardSpace {
     _color: string,
     _width: number,
     _height: number,
+    _board: Board
   ) {
     this._color = _color;
     this.position = position;
     this._width = _width;
     this._height = _height;
+    this._boardReference = _board;
+    console.log("Creating: " + this.position.x / 51 + ", " + this.position.y/51);
   }
 
   changeColor(color: string) {
@@ -100,11 +119,40 @@ class BoardSpace {
     // Increase the level of the crops on this plot
     for (const item of this._inventory) {
       if (this.cropLevel < 3 && this.cropLevel > 0) {
-        this.cropLevel++;
+        if (this.waterLevel > 0 && this.sunlightLevel > 0) {
+          this.plantXP += this.waterLevel + this.sunlightLevel;
+        }
+        if (this.plantXP > 5) {
+          this.cropLevel += 1;
+          this.plantXP = 0;
+        }
       }
+      // Adjust thte sunlight and water levels
+      this.waterLevel = this.getAdjacentWaters();
+      this.sunlightLevel = generateRandomInt(0, 3);
+
       // Redraw only the plant without resetting the space
       item.draw(ctx, this.position, this._width, this._height, this.cropLevel);
     }
+  }
+
+  getAdjacentWaters() {
+    let adjWaters: number = 0;
+    const tempX = this.position.x/51;
+    const tempY = this.position.y/51;
+    if (tempX > 1) {
+      adjWaters += this._boardReference.spaces[tempX - 1][tempY].waterLevel;
+    }
+    if (tempX < 24) {
+      adjWaters += this._boardReference.spaces[tempX + 1][tempY].waterLevel;
+    }
+    if (tempY > 1) {
+      adjWaters += this._boardReference.spaces[tempX][tempY - 1].waterLevel;
+    }
+    if (tempY < 13) {
+      adjWaters += this._boardReference.spaces[tempX][tempY + 1].waterLevel;
+    }
+    return adjWaters / 2 ;
   }
 
   getPlants() {

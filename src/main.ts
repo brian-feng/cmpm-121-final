@@ -120,5 +120,8 @@ timeButton.addEventListener("click", () => {
   if(ctx){
     board.advanceTime(ctx);
   }
+  if (board.getLevel3Plants() >= 10) {
+    console.log("You win!");
+  }
 });
 wrapper.appendChild(timeButton);
