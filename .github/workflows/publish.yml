@@ -1,4 +1,4 @@
-name: Deploy static content to Pages
+name: Continuous Integration and Deployment
 on:
   push:
     branches: ["main"]
@@ -8,6 +8,20 @@ permissions:
   pages: write
   id-token: write
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Check types
+        run: deno check src/
+      - name: Check format
+        run: deno fmt --check src/
+      - name: Check lint
+        run: deno lint .
   deploy:
     environment:
       name: github-pages
