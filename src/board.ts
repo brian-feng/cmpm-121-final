@@ -59,48 +59,6 @@ export default class Board {
       return this.spaces[pos.x][pos.y];
     }
   }
-
-
-  //this function will replace the constructor eventually
-  //this function initializes the board, and should only be run if the save data is not found
-  //everything gets defaulted to either nothing or a random value, except the player spawns on 0,0
-  initializeBoard(canvas: HTMLCanvasElement){
-    let tileCount = 0;
-    for (let x = 0; x < canvas.width - this.width; x += this.width + 1) {
-      for (let y = 0; y < canvas.height - this.height; y += this.height + 1) {
-        // Select a random color
-        const tileColor = generateRandomInt(1,2); // color is an int, we can choose the color from the int later
-        const cropLevel = 0;
-        const waterLevel = generateRandomInt(0, 3);
-        const sunlightLevel = generateRandomInt(0, 3);
-        const xPos = x;
-        const yPos = y;
-        const width = SPACEWIDTH;
-        const height = SPACEHEIGHT;
-        const hasPlayer = false;
-        const plantName = 0; // plant name 0 since no plant here
-        const plantColor = 0; // plant color 0 since no plant here
-
-        const tile: boardTile = {
-          tileColor,
-          cropLevel,
-          waterLevel,
-          sunlightLevel,
-          xPos,
-          yPos,
-          width,
-          height,
-          hasPlayer,
-          plantName,
-          plantColor,
-        };
-
-        this.board[tileCount] = tile;
-        tileCount++;
-      }
-    }
-    this.board[0].hasPlayer = true;
-  }
 }
 
 class BoardSpace {

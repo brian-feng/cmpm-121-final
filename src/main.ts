@@ -52,12 +52,19 @@ plantSpecies.map((plant) => {
   buttonContainer.appendChild(button);
 });
 
-// Setting Up Board and Player
+
+// Old Setting Up Board and Player
 const board = new Board(canvas);
 const ctx = canvas.getContext("2d");
 const player = new Player(board);
 let currentPlant: Plant = plantSpecies[0];
 
+/*
+this would be the new board, save state 1 loaded initially but can be changed later
+const board = loadGame(1, canvas);
+const ctx = canvas.getContext("2d");
+let currentPlant: Plant = plantSpecies[0];
+*/
 // Set initial current plant text
 currentPlantText.textContent = "Current Plant: " + currentPlant.name;
 

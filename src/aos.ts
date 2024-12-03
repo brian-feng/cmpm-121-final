@@ -1,3 +1,5 @@
+import generateRandomInt from "./random.ts";
+
 export default interface boardTile{
   tileColor: number, //color of tile, numbers represent different colors
   cropLevel: number, //crop level (0 means no plant here)
@@ -102,17 +104,58 @@ export function saveGame(board: boardTile[], fileNumber: number){
     console.log("Game saved under save file" + saveFile.toString());
 }
 
-export function loadGame(fileNumber: number): boardTile[] | null {
+export function loadGame(fileNumber: number, canvas: HTMLCanvasElement): boardTile[] {
     const saveFile = "saveData" + fileNumber.toString(); //load this save file
     const json = localStorage.getItem(saveFile);
 
-    //return null if no save data found at this location
+    //return a new board if no save data found
     if (!json) {
-        console.warn("No save data found.");
-        return null;
+        console.warn("No save data found. Creating new save.");
+        return initializeBoard(canvas);
     }
 
     //get the data and return it
     const data = JSON.parse(json) as Uint8Array;
     return deserializeBoard(data);
 }
+
+const SPACEWIDTH: number = 50;
+const SPACEHEIGHT: number = 50;
+// initializes the board with default values
+function initializeBoard(canvas: HTMLCanvasElement): boardTile[] {
+    const board: boardTile[] = [];
+    for (let x = 0; x < canvas.width - SPACEWIDTH; x += SPACEWIDTH + 1) {
+      for (let y = 0; y < canvas.height - SPACEHEIGHT; y += SPACEHEIGHT + 1) {
+        // Select a random color
+        const tileColor = generateRandomInt(1,2); // color is an int, we can choose the color from the int later
+        const cropLevel = 0;
+        const waterLevel = generateRandomInt(0, 3);
+        const sunlightLevel = generateRandomInt(0, 3);
+        const xPos = x;
+        const yPos = y;
+        const width = SPACEWIDTH;
+        const height = SPACEHEIGHT;
+        const hasPlayer = false;
+        const plantName = 0; // plant name 0 since no plant here
+        const plantColor = 0; // plant color 0 since no plant here
+
+        const tile: boardTile = {
+          tileColor,
+          cropLevel,
+          waterLevel,
+          sunlightLevel,
+          xPos,
+          yPos,
+          width,
+          height,
+          hasPlayer,
+          plantName,
+          plantColor,
+        };
+
+        board.push(tile);
+      }
+    }
+    board[0].hasPlayer = true;
+    return board;
+  }
