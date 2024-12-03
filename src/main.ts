@@ -2,6 +2,7 @@ import "./style.css";
 import Board from "./board.ts";
 import Plant from "./plant.ts";
 import Player from "./player.ts";
+import boardTile, { saveGame, loadGame } from "./aos.ts";
 
 // Create the wrapper container
 const container = document.getElementById("app") || document.body;

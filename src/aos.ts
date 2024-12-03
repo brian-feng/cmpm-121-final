@@ -32,7 +32,7 @@ function encodeTile(tile: boardTile, buffer: DataView, offset: number): number {
     return start;
 }
 
-export function serializeBoard(tiles: boardTile[]): Uint8Array {
+function serializeBoard(tiles: boardTile[]): Uint8Array {
     const tileSize = (4 * 10) + 1; // 10 integers @ 4 bytes each, 1 boolean @ 1 byte
     const buffer = new ArrayBuffer(tileSize * tiles.length);
     const dataView = new DataView(buffer);
@@ -79,7 +79,7 @@ function decodeTile(buffer: DataView, offset: number): [boardTile, number] {
     return [tile, start]; // Return the tile and new offset
 }
 
-export function deserializeBoard(data: Uint8Array): boardTile[] {
+function deserializeBoard(data: Uint8Array): boardTile[] {
     const buffer = new DataView(data.buffer);
     const tiles: boardTile[] = [];
     let offset = 0;
@@ -91,4 +91,28 @@ export function deserializeBoard(data: Uint8Array): boardTile[] {
     }
 
     return tiles;
+}
+
+export function saveGame(board: boardTile[], fileNumber: number){
+    const saveFile = "saveData" + fileNumber.toString(); //to handle multiple saves
+    
+    //convert the board into Uint8Array and save this to localStorage
+    const data = serializeBoard(board);
+    localStorage.setItem(saveFile, JSON.stringify(data));
+    console.log("Game saved under save file" + saveFile.toString());
+}
+
+export function loadGame(fileNumber: number): boardTile[] | null {
+    const saveFile = "saveData" + fileNumber.toString(); //load this save file
+    const json = localStorage.getItem(saveFile);
+
+    //return null if no save data found at this location
+    if (!json) {
+        console.warn("No save data found.");
+        return null;
+    }
+
+    //get the data and return it
+    const data = JSON.parse(json) as Uint8Array;
+    return deserializeBoard(data);
 }
