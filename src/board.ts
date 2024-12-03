@@ -103,6 +103,14 @@ class BoardSpace {
     plant.draw(ctx, this.position, this._width, this._height, this.cropLevel);
   }
 
+  removeHere(ctx: CanvasRenderingContext2D){
+    this._inventory = [];
+    this.cropLevel = 0;
+    ctx.fillStyle = "black";
+    ctx.fillRect(this.position.x, this.position.y, this._width, this._height);
+    ctx.fillStyle = this._color;
+  }
+
   refreshSpace(ctx: CanvasRenderingContext2D) {
     this.draw(ctx);
     for (const item of this._inventory) {

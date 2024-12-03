@@ -99,6 +99,9 @@ document.addEventListener("keydown", (event) => {
         if(board.getSpace(player.position)?.getPlants().length == 0) {
           board.getSpace(player.position)?.placeHere(ctx, currentPlant);
         }
+        else{
+          board.getSpace(player.position)?.removeHere(ctx);
+        }
         break;
     }
 
@@ -121,7 +124,7 @@ timeButton.addEventListener("click", () => {
     board.advanceTime(ctx);
   }
   if (board.getLevel3Plants() >= 10) {
-    console.log("You win!");
+    alert("You win!");
   }
 });
 wrapper.appendChild(timeButton);
