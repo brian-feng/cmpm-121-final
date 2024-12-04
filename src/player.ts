@@ -23,46 +23,6 @@ export default class Player {
     // initialize player on this place
     this.draw(this.ctx);
     this.board = board;
-    this.canvas.addEventListener("click", () => {
-      console.log('is being clicked');
-    })
-    this.canvas.addEventListener("keydown", (event) => {
-      console.log('awjbawdjhoad');
-      // if (this.ctx) {
-        console.log('entered');
-            switch (event.key) {
-              case "ArrowUp":
-                this.move(this.ctx, 0, -1);
-                console.log('up');
-                break;
-              case "ArrowDown":
-                this.move(this.ctx, 0, 1);
-                console.log('down');
-                break;
-              case "ArrowLeft":
-                this.move(this.ctx, -1, 0);
-                break;
-              case "ArrowRight":
-                this.move(this.ctx, 1, 0);
-                break;
-              case "w":
-                this.move(this.ctx, 0, -1);
-                break;
-              case "a":
-                this.move(this.ctx, -1, 0);
-                break;
-              case "s":
-                this.move(this.ctx, 0, 1);
-                break;
-              case "d":
-                this.move(this.ctx, 1, 0);
-                break;
-              case " ":
-                event.preventDefault(); // Prevent the default spacebar action (scrolling, etc.)
-                break;
-            }
-      // }
-    });
   }
 
   move(ctx: CanvasRenderingContext2D, x: number, y: number) {

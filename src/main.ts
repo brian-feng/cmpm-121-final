@@ -67,8 +67,17 @@ const ctx = canvas.getContext("2d");
 let currentPlant: Plant = plantSpecies[0];
 */
 
-const board = loadGame(1, canvas);
+const boardTiles = loadGame(1, canvas);
 const ctx = canvas.getContext("2d");
+const board = new Board(ctx!, boardTiles);
+
+console.log('boardtiles', boardTiles);
+if (board.tiles.length > 0) {
+  board.tiles.forEach(tile => {
+    board.addTile(tile);
+  });
+  board.drawPlayer(ctx!);
+}
 // const player = new Player(canvas,board);
 let currentPlant: Plant = plantSpecies[0];
 // Set initial current plant text
@@ -81,54 +90,58 @@ currentPlantText.textContent = "Current Plant: " + currentPlant.name;
 
 // // Handle player movement
 
-// document.addEventListener("keydown", (event) => {
-//   if (ctx) {
-//     switch (event.key) {
-//       case "ArrowUp":
-//         player.move(ctx, 0, -1);
-//         break;
-//       case "ArrowDown":
-//         player.move(ctx, 0, 1);
-//         break;
-//       case "ArrowLeft":
-//         player.move(ctx, -1, 0);
-//         break;
-//       case "ArrowRight":
-//         player.move(ctx, 1, 0);
-//         break;
-//       case "w":
-//         player.move(ctx, 0, -1);
-//         break;
-//       case "a":
-//         player.move(ctx, -1, 0);
-//         break;
-//       case "s":
-//         player.move(ctx, 0, 1);
-//         break;
-//       case "d":
-//         player.move(ctx, 1, 0);
-//         break;
-//       case " ":
-//         event.preventDefault(); // Prevent the default spacebar action (scrolling, etc.)
-//         if(board.getSpace(player.position)?.getPlants().length == 0) {
-//           board.getSpace(player.position)?.placeHere(ctx, currentPlant);
-//         }
-//         else{
-//           board.getSpace(player.position)?.removeHere(ctx);
-//         }
-//         break;
-//     }
+document.addEventListener("keydown", (event) => {
+  if (ctx) {
+    switch (event.key) {
+      case "ArrowUp":
+        board.playerMove(ctx, 0, -1);
+        break;
+      case "ArrowDown":
+        board.playerMove(ctx, 0, 1);
+        break;
+      case "ArrowLeft":
+        board.playerMove(ctx, -1, 0);
+        break;
+      case "ArrowRight":
+        board.playerMove(ctx, 1, 0);
+        break;
+      case "w":
+        board.playerMove(ctx, 0, -1);
+        break;
+      case "a":
+        board.playerMove(ctx, -1, 0);
+        break;
+      case "s":
+        board.playerMove(ctx, 0, 1);
+        break;
+      case "d":
+        board.playerMove(ctx, 1, 0);
+        break;
+      case " ":
+        event.preventDefault(); // Prevent the default spacebar action (scrolling, etc.)
+        // if(board.getSpace(board.playerPos)?.getPlants().length == 0) {
+        //   board.getSpace(board.playerPos)?.placeHere(ctx, currentPlant);
+        // }
+        // else{
+        //   board.getSpace(board.playerPos)?.removeHere(ctx);
+        // }
+        // break;
+    }
 
-//     //draw plant here
-//     const space = board.getSpace(player.position);
-//     if (space) {
-//       space.getPlants().forEach((plant) => {
-//         plant.draw(ctx, space.position, space.getWidth(), space.getHeight(), space.cropLevel);
-//       });
-//     }
-//   }
-// });
-
+    //draw plant here
+    const space = board.getSpace(board.playerPos);
+    // if (space) {
+    //     plant.draw(ctx, {x: space.xPos, y: space.yPos}, space.width, space.height, space.cropLevel);
+    //   };
+    }
+  }
+);
+const saveButton = document.createElement("button");
+saveButton.innerHTML = "Save game";
+saveButton.addEventListener("click", () => {
+    saveGame(board.tiles, 1);
+});
+wrapper.appendChild(saveButton);
 
 // // Advance time
 // const timeButton = document.createElement("button");

@@ -10,32 +10,52 @@ export default class Board {
   height: number = SPACEHEIGHT;
   tiles: BoardTile[];
   ctx: CanvasRenderingContext2D;
+  playerPos: Position;
   constructor(ctx: CanvasRenderingContext2D, tiles: BoardTile[]) {
     this.tiles = tiles;
     this.ctx = ctx;
+    this.playerPos = {x: 0, y: 0} // render default position if no playerTile
+    const playerTile = tiles.find((tile) => tile.hasPlayer == true);
+    if (playerTile) {
+      this.playerPos = {x: playerTile.xPos, y: playerTile.yPos}
+      console.log('playerTile pos: ', playerTile.xPos, playerTile.yPos);
+    };
+    
+    this.drawPlayer(ctx);
   }
-
+  
   addTile(tile: BoardTile) {
     this.tiles.push(tile);
-    this.ctx!.fillStyle = "green";
+    if (tile.tileColor == 1) this.ctx!.fillStyle = "green";
+    else this.ctx!.fillStyle = "lime";
     this.ctx!.fillRect(tile.xPos, tile.yPos, tile.width, tile.height);
   }
 
-  // getTiles() {
-  //   return this.tiles;
-  // }
-
   drawTile(ctx: CanvasRenderingContext2D, tile: BoardTile) {
-    this.tiles.forEach(tile => {
-      this.ctx!.fillStyle = "green";
+    if (tile.tileColor == 1) this.ctx!.fillStyle = "green";
+      else this.ctx!.fillStyle = "lime";
       this.ctx!.fillRect(tile.xPos, tile.yPos, tile.width, tile.height);  
-    });
+
   }
 
   advanceTime(ctx: CanvasRenderingContext2D, tile: BoardTile) {
     this.tiles.forEach((tile) => {
         // There is an advanceTime function for each tile
-        // tile.advanceTime(ctx);
+        if (tile.cropLevel < 3 && tile.cropLevel > 0) {
+          if (tile.waterLevel > 0 && tile.sunlightLevel > 0) {
+            tile.plantXP += tile.waterLevel + tile.sunlightLevel;
+          }
+          if (tile.plantXP > 5) {
+            tile.cropLevel += 1;
+            tile.plantXP = 0;
+          }
+        }
+        // Adjust thte sunlight and water levels
+        tile.waterLevel = this.getAdjacentWaters(tile);
+        tile.sunlightLevel = generateRandomInt(0, 3);
+  
+        // Redraw only the plant without resetting the space
+        // item.draw(ctx, tile.position, tile._width, tile._height, tile.cropLevel);
         // TODO: create an advanceTime function
       })
   }
@@ -51,28 +71,105 @@ export default class Board {
     return count;
   }
   
+  getAdjacentWaters(tile: BoardTile) {
+        let adjWaters: number = 0;
+        const tempX = tile.xPos;
+        const tempY = tile.yPos;
+        // const tempX = this.position.x/51;
+        // const tempY = this.position.y/51;
+        if (tempX > 1) {
+          const tempTile = this.getSpace({x: tempX - 1,y: tempY});
+          if (tempTile)
+            adjWaters += tempTile.waterLevel;
+        }
+        if (tempX < 24) {
+          const tempTile = this.getSpace({x: tempX + 1,y: tempY});
+          if (tempTile)
+            adjWaters += tempTile.waterLevel;
+        }
+        if (tempY > 1) {
+          const tempTile = this.getSpace({x: tempX,y: tempY - 1});
+          if (tempTile)
+            adjWaters += tempTile.waterLevel;
+        }
+        if (tempY < 13) {
+          const tempTile = this.getSpace({x: tempX,y: tempY + 1});
+          if (tempTile)
+            adjWaters += tempTile.waterLevel;
+        }
+        return adjWaters / 2 ;
+      }
 
   getSpace(pos: Position) {
-    console.log("position: ", pos);
-    // if (this.board[pos.x] && this.board[pos.x][pos.y] !== undefined) {
-    //   // check if space exists
-    //   return this.board[pos.x][pos.y];
-    // }
-    const found = this.tiles.find(tile => {
-      tile.xPos = pos.x;
-      tile.yPos = pos.y;
-    });
+    const found = this.tiles.find(tile => tile.xPos == pos.x && tile.yPos == pos.y);
     if (found) {
       return found;
+    }
+    else{
+      console.log("not found");
     }
   }
   refreshSpace(ctx: CanvasRenderingContext2D, tile: BoardTile) {
         this.drawTile(ctx, tile);
+        //tile.draw(ctx, )
         // for (const item of this.tiles) {
         //   // item.draw(ctx, this.position, this._width, this._height, this.cropLevel);
         //   this.drawTile(ctx, item)
         // }
+  }
+/*
+  move(ctx: CanvasRenderingContext2D, x: number, y: number) {
+    // TODO: refactor!!
+    const prevSpace = this.board.getSpace(this.pos);
+    this.pos.x += x;
+    this.pos.y += y;
+    const newSpace = this.board.getSpace(this.pos);
+    if (prevSpace && newSpace) {
+      this.board.refreshSpace(ctx, prevSpace);
+      console.log("playerPos: ", this.pos);
+      this.draw(ctx);
+    } else {
+      this.pos.x -= x;
+      this.pos.y -= y;
+    }
+  }
+  */
+
+  playerMove(ctx: CanvasRenderingContext2D, x: number, y: number){
+    //const prevPos = {currX, currY};
+    const currPos = this.getSpace(this.playerPos);
+    if (currPos) {
+       this.playerPos.x += x * 51;
+       this.playerPos.y += y * 51;
+
+
+       const newPos = this.getSpace(this.playerPos);
+      if (newPos) {
+        console.log('newPos: ', newPos);
+        this.refreshSpace(ctx, currPos);
+        // this.playerPos = {x: newX, y: newY};
+        this.drawPlayer(ctx);
+        currPos.hasPlayer = false;
+        newPos.hasPlayer = true;
+      } else {
+        this.playerPos.x -=  x * 51;
+        this.playerPos.y -= y * 51;
       }
+    }
+
+    // currPos.hasPlayer = false;
+    // newPos.hasPlayer = true;
+   
+    
+  }
+
+  drawPlayer(ctx: CanvasRenderingContext2D){
+    const currentTile = this.getSpace(this.playerPos);
+    if (currentTile)
+      currentTile.hasPlayer = true;
+    ctx.fillStyle="black";
+    ctx.fillRect(this.playerPos.x, this.playerPos.y, this.width, this.height);
+  }
 }
 
 // class BoardSpace {
