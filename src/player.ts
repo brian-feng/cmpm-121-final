@@ -1,36 +1,119 @@
 import Board from "./board.ts";
 import Position from "./position.ts";
+import BoardTile from "./boardTile.ts";
 
 const image = new Image();
 image.src =
   "https://www.pikpng.com/pngl/b/234-2345936_kawaii-pixel-ghost-stickers-messages-sticker-2-plain.png";
 
 export default class Player {
-  position: Position = { x: 0, y: 0 };
+  // requires the current boardspace
+  pos: Position;
+  width: number;
+  height: number;
+  canvas: HTMLCanvasElement;
   board: Board;
-  constructor(board: Board) {
+  ctx: CanvasRenderingContext2D;
+  constructor (canvas: HTMLCanvasElement, pos: Position, width: number, height: number, ctx: CanvasRenderingContext2D, board: Board){
+    this.canvas = canvas;
+    this.pos = pos;
+    this.width = width;
+    this.height = height;
+    this.ctx = canvas.getContext("2d")!;
+    // initialize player on this place
+    this.draw(this.ctx);
     this.board = board;
+    this.canvas.addEventListener("click", () => {
+      console.log('is being clicked');
+    })
+    this.canvas.addEventListener("keydown", (event) => {
+      console.log('awjbawdjhoad');
+      // if (this.ctx) {
+        console.log('entered');
+            switch (event.key) {
+              case "ArrowUp":
+                this.move(this.ctx, 0, -1);
+                console.log('up');
+                break;
+              case "ArrowDown":
+                this.move(this.ctx, 0, 1);
+                console.log('down');
+                break;
+              case "ArrowLeft":
+                this.move(this.ctx, -1, 0);
+                break;
+              case "ArrowRight":
+                this.move(this.ctx, 1, 0);
+                break;
+              case "w":
+                this.move(this.ctx, 0, -1);
+                break;
+              case "a":
+                this.move(this.ctx, -1, 0);
+                break;
+              case "s":
+                this.move(this.ctx, 0, 1);
+                break;
+              case "d":
+                this.move(this.ctx, 1, 0);
+                break;
+              case " ":
+                event.preventDefault(); // Prevent the default spacebar action (scrolling, etc.)
+                break;
+            }
+      // }
+    });
   }
+
   move(ctx: CanvasRenderingContext2D, x: number, y: number) {
     // TODO: refactor!!
-    const prevSpace = this.board.getSpace(this.position);
-    this.position.x += x;
-    this.position.y += y;
-    const newSpace = this.board.getSpace(this.position);
+    const prevSpace = this.board.getSpace(this.pos);
+    this.pos.x += x;
+    this.pos.y += y;
+    const newSpace = this.board.getSpace(this.pos);
     if (prevSpace && newSpace) {
-      prevSpace.refreshSpace(ctx);
-      console.log("playerPos: ", this.position);
-      this.draw(ctx, newSpace.position);
+      this.board.refreshSpace(ctx, prevSpace);
+      console.log("playerPos: ", this.pos);
+      this.draw(ctx);
     } else {
-      this.position.x -= x;
-      this.position.y -= y;
+      this.pos.x -= x;
+      this.pos.y -= y;
     }
   }
 
-  draw(ctx: CanvasRenderingContext2D, pos: Position) {
-    // image wasn't working so temporarily the player is a black square
-    //ctx.drawImage(image, pos.x, pos.y, this.board.width, this.board.height);
+  draw(ctx: CanvasRenderingContext2D) {
+    ctx.drawImage(image, this.pos.x, this.pos.y, this.width, this.height);
     ctx.fillStyle="black";
-    ctx.fillRect(pos.x, pos.y, this.board.width, this.board.height);
+    ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height);
   }
+  
+  // PREVIOUS CODE
+  // position: Position = { x: 0, y: 0 };
+  // board: Board;
+  // constructor(board: Board) {
+  //   this.board = board;
+  // }
+  // move(ctx: CanvasRenderingContext2D, x: number, y: number) {
+  //   // TODO: refactor!!
+  //   const prevSpace = this.board.getSpace(this.position);
+  //   this.position.x += x;
+  //   this.position.y += y;
+  //   const newSpace = this.board.getSpace(this.position);
+  //   if (prevSpace && newSpace) {
+  //     prevSpace.refreshSpace(ctx);
+  //     console.log("playerPos: ", this.position);
+  //     this.draw(ctx, newSpace.position);
+  //   } else {
+  //     this.position.x -= x;
+  //     this.position.y -= y;
+  //   }
+  // }
+
+  // draw(ctx: CanvasRenderingContext2D, pos: Position) {
+  //   // image wasn't working so temporarily the player is a black square
+  //   //ctx.drawImage(image, pos.x, pos.y, this.board.width, this.board.height);
+  //   ctx.fillStyle="black";
+  //   ctx.fillRect(pos.x, pos.y, this.board.width, this.board.height);
+  // }
+  
 }

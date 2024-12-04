@@ -1,20 +1,8 @@
 import generateRandomInt from "./random.ts";
-
-export default interface boardTile{
-  tileColor: number, //color of tile, numbers represent different colors
-  cropLevel: number, //crop level (0 means no plant here)
-  waterLevel: number,
-  sunlightLevel: number,
-  xPos: number,
-  yPos: number,
-  width: number,
-  height: number,
-  hasPlayer: boolean, //true if player is on this tile
-  plantName: number, //our plant names are just "Plant X" anyway, save as number
-  plantColor: number, //color of plant, numbers represent different colors
-}
-
-function encodeTile(tile: boardTile, buffer: DataView, offset: number): number {
+import BoardTile from "./boardTile.ts";
+import Player from "./player.ts";
+import Board from "./board.ts";
+function encodeTile(tile: BoardTile, buffer: DataView, offset: number): number {
     let start = offset;
 
     buffer.setInt32(start, tile.tileColor); start += 4;
@@ -34,7 +22,7 @@ function encodeTile(tile: boardTile, buffer: DataView, offset: number): number {
     return start;
 }
 
-function serializeBoard(tiles: boardTile[]): Uint8Array {
+function serializeBoard(tiles: BoardTile[]): Uint8Array {
     const tileSize = (4 * 10) + 1; // 10 integers @ 4 bytes each, 1 boolean @ 1 byte
     const buffer = new ArrayBuffer(tileSize * tiles.length);
     const dataView = new DataView(buffer);
@@ -47,7 +35,7 @@ function serializeBoard(tiles: boardTile[]): Uint8Array {
     return new Uint8Array(buffer);
 }
 
-function decodeTile(buffer: DataView, offset: number): [boardTile, number] {
+function decodeTile(buffer: DataView, offset: number): [BoardTile, number] {
     let start = offset;
 
     const tileColor = buffer.getInt32(start); start += 4;
@@ -64,7 +52,7 @@ function decodeTile(buffer: DataView, offset: number): [boardTile, number] {
     const plantName = buffer.getInt32(start); start += 4;
     const plantColor = buffer.getInt32(start); start += 4;
 
-    const tile: boardTile = {
+    const tile: BoardTile = {
         tileColor,
         cropLevel,
         waterLevel,
@@ -81,9 +69,9 @@ function decodeTile(buffer: DataView, offset: number): [boardTile, number] {
     return [tile, start]; // Return the tile and new offset
 }
 
-function deserializeBoard(data: Uint8Array): boardTile[] {
+function deserializeBoard(data: Uint8Array): BoardTile[] {
     const buffer = new DataView(data.buffer);
-    const tiles: boardTile[] = [];
+    const tiles: BoardTile[] = [];
     let offset = 0;
 
     while (offset < buffer.byteLength) {
@@ -95,7 +83,7 @@ function deserializeBoard(data: Uint8Array): boardTile[] {
     return tiles;
 }
 
-export function saveGame(board: boardTile[], fileNumber: number){
+export function saveGame(board: BoardTile[], fileNumber: number){
     const saveFile = "saveData" + fileNumber.toString(); //to handle multiple saves
     
     //convert the board into Uint8Array and save this to localStorage
@@ -104,7 +92,7 @@ export function saveGame(board: boardTile[], fileNumber: number){
     console.log("Game saved under save file" + saveFile.toString());
 }
 
-export function loadGame(fileNumber: number, canvas: HTMLCanvasElement): boardTile[] {
+export function loadGame(fileNumber: number, canvas: HTMLCanvasElement): BoardTile[] {
     const saveFile = "saveData" + fileNumber.toString(); //load this save file
     const json = localStorage.getItem(saveFile);
 
@@ -122,8 +110,14 @@ export function loadGame(fileNumber: number, canvas: HTMLCanvasElement): boardTi
 const SPACEWIDTH: number = 50;
 const SPACEHEIGHT: number = 50;
 // initializes the board with default values
-function initializeBoard(canvas: HTMLCanvasElement): boardTile[] {
-    const board: boardTile[] = [];
+function initializeBoard(canvas: HTMLCanvasElement): BoardTile[] {
+    const tiles: BoardTile[] = [];
+    const ctx = canvas.getContext("2d");
+
+    if(ctx) console.log('ctx found in aos');
+    else console.log('ctx null in aos');
+    
+    const board = new Board(ctx!, tiles);
     for (let x = 0; x < canvas.width - SPACEWIDTH; x += SPACEWIDTH + 1) {
       for (let y = 0; y < canvas.height - SPACEHEIGHT; y += SPACEHEIGHT + 1) {
         // Select a random color
@@ -139,7 +133,7 @@ function initializeBoard(canvas: HTMLCanvasElement): boardTile[] {
         const plantName = 0; // plant name 0 since no plant here
         const plantColor = 0; // plant color 0 since no plant here
 
-        const tile: boardTile = {
+        const tile: BoardTile = {
           tileColor,
           cropLevel,
           waterLevel,
@@ -153,9 +147,14 @@ function initializeBoard(canvas: HTMLCanvasElement): boardTile[] {
           plantColor,
         };
 
-        board.push(tile);
+        board.addTile(tile);
+        // ctx!.fillStyle = "green";
+        // ctx!.fillRect(xPos, yPos, width, height);
       }
     }
-    board[0].hasPlayer = true;
-    return board;
+    board.tiles[0].hasPlayer = true;
+    const playerPos = {x: board.tiles[0].xPos, y: board.tiles[0].yPos}
+    const _player = new Player(canvas, playerPos, board.tiles[0].width, board.tiles[0].height, ctx!, board);
+    // console.log(board)
+    return board.tiles;
   }
