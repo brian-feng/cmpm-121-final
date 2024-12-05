@@ -114,6 +114,10 @@ export function saveGame(board: BoardTile[], fileNumber: number): void {
 }
 
 export function loadGame(fileNumber: number, canvas: HTMLCanvasElement): BoardTile[] {
+    if (fileNumber == -1) {
+        console.warn("No load file provided. Creating a new board");
+        return initializeBoard(canvas);
+    }
     const saveFile = "saveData" + fileNumber.toString(); // File key to load
 
     // Retrieve Base64 string from localStorage

@@ -75,7 +75,8 @@ const ctx = canvas.getContext("2d");
 let currentPlant: Plant = plantSpecies[0];
 */
 
-const boardTiles = loadGame(1, canvas);
+const loadSave: number = getFileNumber();
+const boardTiles = loadGame(loadSave, canvas);
 const ctx = canvas.getContext("2d");
 const board = new Board(ctx!, boardTiles);
 
@@ -147,10 +148,29 @@ document.addEventListener("keydown", (event) => {
     }
   }
 );
+
+function getFileNumber(): number {
+  let playerInput = prompt("Enter the save file number (1-3): ");
+  if (playerInput === null) {
+    return -1;
+  }
+  let fileNumber = parseInt(playerInput);
+  while (isNaN(fileNumber) || fileNumber < 1 || fileNumber > 3) {
+    playerInput = prompt("Invalid input. Enter the save file number (1-3): ");
+    if (playerInput === null) {
+      return -1;
+    }
+    fileNumber = parseInt(playerInput);
+  }
+  console.log("fileNumber: ", fileNumber);
+  return fileNumber;
+}
+
 const saveButton = document.createElement("button");
 saveButton.innerHTML = "Save game";
 saveButton.addEventListener("click", () => {
-    saveGame(board.tiles, 1);
+    const number = getFileNumber();
+    if (number != -1) saveGame(board.tiles, number);
 });
 wrapper.appendChild(saveButton);
 
