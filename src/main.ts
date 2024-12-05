@@ -83,11 +83,12 @@ const board = new Board(ctx!, boardTiles);
 console.log('boardtiles', boardTiles);
 if (board.tiles.length > 0) {
   board.tiles.forEach(tile => {
-    board.addTile(tile);
+    board.drawTile(ctx!, tile);
     if(tile.cropLevel > 0) board.drawPlant(ctx!, tile);
   });
   board.drawPlayer(ctx!);
 }
+
 // const player = new Player(canvas,board);
 let currentPlant: Plant = plantSpecies[0];
 // Set initial current plant text
