@@ -52,7 +52,7 @@ plantSpecies.map((plant) => {
   else name = "White";
 
   button.innerHTML = name;
-  button.style.margin = "5px";
+  button.style.margin = "10px";
   button.addEventListener("click", () => {
     dispatchEvent(currentPlantChange);
     currentPlantID = plant.color;
@@ -167,6 +167,10 @@ function getFileNumber(): number {
   return fileNumber;
 }
 
+function addSpacing(button: HTMLButtonElement){
+  button.style.marginTop = "10px";
+}
+
 const saveButton = document.createElement("button");
 saveButton.innerHTML = "Save game";
 saveButton.addEventListener("click", () => {
@@ -186,4 +190,20 @@ timeButton.addEventListener("click", () => {
     alert("You win!");
   }
 });
+addSpacing(timeButton);
 wrapper.appendChild(timeButton);
+
+const undoRedoDiv = document.createElement("div")
+wrapper.appendChild(undoRedoDiv);
+
+const undoButton = document.createElement("button");
+undoButton.innerHTML = "Undo";
+undoButton.style.marginRight = "5px";
+addSpacing(undoButton);
+undoRedoDiv.appendChild(undoButton);
+
+const redoButton = document.createElement("button");
+redoButton.innerHTML = "Redo";
+undoButton.style.marginLeft = "5px";
+addSpacing(redoButton);
+undoRedoDiv.appendChild(redoButton);
