@@ -10,16 +10,16 @@ import Position from "./position.ts";
 // }
 
 export default class Plant {
-  color: string;
+  color: number;
   name: number;
-  constructor(color: string, name: number) {
+  constructor(color: number, name: number) {
     this.color = color;
     this.name = name;
   }
   placePlant() {
   }
   draw(ctx: CanvasRenderingContext2D, pos: Position, w: number, h: number, level: number) {
-    ctx.fillStyle = this.color;
+    ctx.fillStyle = this.color.toString();
   
     // Calculate the plant size based on the level
     let sizePercentage = 0;
