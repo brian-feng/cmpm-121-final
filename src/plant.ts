@@ -10,9 +10,9 @@ import Position from "./position.ts";
 // }
 
 export default class Plant {
-  color: string;
-  name: string;
-  constructor(color: string, name: string) {
+  color: number;
+  name: number;
+  constructor(color: number, name: number) {
     this.color = color;
     this.name = name;
   }

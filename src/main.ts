@@ -36,19 +36,27 @@ wrapper.appendChild(buttonContainer);
 
 const currentPlantChange = new Event("current-plant-changed");
 const plantSpecies: Plant[] = [
-  new Plant("purple", "flower1"),
-  new Plant("brown", "flower2"),
-  new Plant("white", "flower3"),
+  new Plant(1, 1), //1 is purple
+  new Plant(2, 2), //2 is brown
+  new Plant(3, 3), //3 is white
 ];
+
+let currentPlantID: number;
 
 plantSpecies.map((plant) => {
   const button = document.createElement("button");
-  button.innerHTML = plant.name;
+  let name = "";
+
+  if(plant.name == 1) name = "Purple";
+  else if (plant.name == 2) name = "Brown";
+  else name = "White";
+
+  button.innerHTML = name;
   button.style.margin = "5px";
   button.addEventListener("click", () => {
     dispatchEvent(currentPlantChange);
-    currentPlant = plant;
-    currentPlantText.textContent = "Current Plant: " + plant.name;
+    currentPlantID = plant.color;
+    currentPlantText.textContent = "Current Plant: " + name;
   });
   buttonContainer.appendChild(button);
 });
@@ -75,13 +83,14 @@ console.log('boardtiles', boardTiles);
 if (board.tiles.length > 0) {
   board.tiles.forEach(tile => {
     board.addTile(tile);
+    if(tile.cropLevel > 0) board.drawPlant(ctx!, tile);
   });
   board.drawPlayer(ctx!);
 }
 // const player = new Player(canvas,board);
 let currentPlant: Plant = plantSpecies[0];
 // Set initial current plant text
-currentPlantText.textContent = "Current Plant: " + currentPlant.name;
+currentPlantText.textContent = "Current Plant: " + "Purple";
 
 // if (ctx) {
 //   board.draw(ctx);
@@ -126,6 +135,8 @@ document.addEventListener("keydown", (event) => {
         //   board.getSpace(board.playerPos)?.removeHere(ctx);
         // }
         // break;
+
+        board.placeHere(ctx, currentPlantID, currentPlantID);
     }
 
     //draw plant here

@@ -29,6 +29,8 @@ export default class Board {
     if (tile.tileColor == 1) this.ctx!.fillStyle = "green";
     else this.ctx!.fillStyle = "lime";
     this.ctx!.fillRect(tile.xPos, tile.yPos, tile.width, tile.height);
+
+    if(tile.cropLevel > 0) this.drawPlant(this.ctx, tile);
   }
 
   drawTile(ctx: CanvasRenderingContext2D, tile: BoardTile) {
@@ -111,6 +113,9 @@ export default class Board {
   }
   refreshSpace(ctx: CanvasRenderingContext2D, tile: BoardTile) {
         this.drawTile(ctx, tile);
+        if(tile.cropLevel > 0){
+          this.drawPlant(ctx, tile);
+        }
         //tile.draw(ctx, )
         // for (const item of this.tiles) {
         //   // item.draw(ctx, this.position, this._width, this._height, this.cropLevel);
@@ -169,6 +174,51 @@ export default class Board {
       currentTile.hasPlayer = true;
     ctx.fillStyle="black";
     ctx.fillRect(this.playerPos.x, this.playerPos.y, this.width, this.height);
+
+    if (currentTile?.cropLevel! > 0) this.drawPlant(ctx, currentTile!);
+  }
+
+  placeHere(ctx: CanvasRenderingContext2D, plantName: number, plantColor: number){
+    const currentTile = this.getSpace(this.playerPos);
+    if (currentTile){
+      currentTile.plantName = plantName;
+      currentTile.plantColor = plantColor;
+      currentTile.cropLevel = 1;
+      this.drawPlant(ctx, currentTile);
+    }
+  }
+
+  drawPlant(ctx: CanvasRenderingContext2D, tile: BoardTile){
+    if(tile.plantColor == 1){
+      ctx.fillStyle = "purple";
+    }
+    else if (tile.plantColor == 2){
+      ctx.fillStyle = "brown";
+    }
+    else{
+      ctx.fillStyle = "white";
+    }
+
+    let sizePercentage = 0;
+    if(tile.cropLevel == 1){
+      sizePercentage = 0.4;
+    }
+    else if(tile.cropLevel == 2){
+      sizePercentage = 0.6;
+    }
+    else {
+      sizePercentage = 0.8;
+    }
+
+    const newWidth = tile.width * sizePercentage;
+    const newHeight = tile.height * sizePercentage;
+
+    ctx.fillRect(
+      tile.xPos + (tile.width - newWidth) / 2,
+      tile.yPos + (tile.height - newHeight) / 2,
+      newWidth,
+      newHeight
+    );
   }
 }
 
