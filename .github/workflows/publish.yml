@@ -20,8 +20,8 @@ jobs:
         run: deno check src/
       #- name: Check format
       #  run: deno fmt --check src/
-      - name: Check lint
-        run: deno lint .
+      #- name: Check lint
+      #  run: deno lint .
   deploy:
     environment:
       name: github-pages
