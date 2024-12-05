@@ -174,15 +174,15 @@ saveButton.addEventListener("click", () => {
 });
 wrapper.appendChild(saveButton);
 
-// // Advance time
-// const timeButton = document.createElement("button");
-// timeButton.innerHTML = "Advance Time";
-// timeButton.addEventListener("click", () => {
-//   if(ctx){
-//     board.advanceTime(ctx);
-//   }
-//   if (board.getLevel3Plants() >= 10) {
-//     alert("You win!");
-//   }
-// });
-// wrapper.appendChild(timeButton);
+// Advance time
+const timeButton = document.createElement("button");
+timeButton.innerHTML = "Advance Time";
+timeButton.addEventListener("click", () => {
+  if(ctx){
+    board.advanceTime(ctx);
+  }
+  if (board.getLevel3Plants() >= 10) {
+    alert("You win!");
+  }
+});
+wrapper.appendChild(timeButton);

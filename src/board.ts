@@ -40,7 +40,8 @@ export default class Board {
 
   }
 
-  advanceTime(ctx: CanvasRenderingContext2D, tile: BoardTile) {
+  advanceTime(ctx: CanvasRenderingContext2D) {
+    let doOnce: boolean = false;
     this.tiles.forEach((tile) => {
         // There is an advanceTime function for each tile
         if (tile.cropLevel < 3 && tile.cropLevel > 0) {
@@ -51,6 +52,13 @@ export default class Board {
             tile.cropLevel += 1;
             tile.plantXP = 0;
           }
+        }
+        // Because the BoardTile gets infinitely bigger, we just check the top of it
+        if (!doOnce && tile.xPos == 51){
+          doOnce = true;
+        }
+        else if (doOnce && tile.xPos == 0){
+          return;
         }
         // Adjust thte sunlight and water levels
         tile.waterLevel = this.getAdjacentWaters(tile);
@@ -63,11 +71,24 @@ export default class Board {
   }
 
   getLevel3Plants() {
+    const completedPlants: BoardTile[] = [];
     //Get count of level 3 plants and return as int
     let count: number = 0;
+    let endCheck: boolean = false;
+    console.log(this.tiles);
     this.tiles.forEach((tile) => {
+      if (endCheck) return;
       if (tile.cropLevel == 3) {
-        count++;
+        completedPlants.forEach(complTile => {
+          if (complTile.xPos == tile.xPos && complTile.yPos == tile.yPos){ 
+            endCheck = true;
+            return;
+          }
+        });
+        if (!endCheck) {
+          completedPlants.push(tile);
+          count++;
+        }
       }
     });
     return count;
@@ -80,26 +101,26 @@ export default class Board {
         // const tempX = this.position.x/51;
         // const tempY = this.position.y/51;
         if (tempX > 1) {
-          const tempTile = this.getSpace({x: tempX - 1,y: tempY});
+          const tempTile = this.getSpace({x: tempX - 51,y: tempY});
           if (tempTile)
             adjWaters += tempTile.waterLevel;
         }
         if (tempX < 24) {
-          const tempTile = this.getSpace({x: tempX + 1,y: tempY});
+          const tempTile = this.getSpace({x: tempX + 51,y: tempY});
           if (tempTile)
             adjWaters += tempTile.waterLevel;
         }
         if (tempY > 1) {
-          const tempTile = this.getSpace({x: tempX,y: tempY - 1});
+          const tempTile = this.getSpace({x: tempX,y: tempY - 51});
           if (tempTile)
             adjWaters += tempTile.waterLevel;
         }
         if (tempY < 13) {
-          const tempTile = this.getSpace({x: tempX,y: tempY + 1});
+          const tempTile = this.getSpace({x: tempX,y: tempY + 51});
           if (tempTile)
             adjWaters += tempTile.waterLevel;
         }
-        return adjWaters / 2 ;
+        return adjWaters / 1.7;
       }
 
   getSpace(pos: Position) {
