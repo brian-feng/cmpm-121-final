@@ -57,7 +57,7 @@ export default class Board {
         tile.sunlightLevel = generateRandomInt(0, 3);
   
         // Redraw only the plant without resetting the space
-        // item.draw(ctx, tile.position, tile._width, tile._height, tile.cropLevel);
+        this.refreshSpace(ctx, tile);
         // TODO: create an advanceTime function
       })
   }
@@ -117,6 +117,9 @@ export default class Board {
         this.drawTile(ctx, tile);
         if(tile.cropLevel > 0){
           this.drawPlant(ctx, tile);
+        }
+        if (tile.hasPlayer) {
+          this.drawPlayer(ctx);
         }
         //tile.draw(ctx, )
         // for (const item of this.tiles) {
