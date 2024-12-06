@@ -14,7 +14,13 @@ export default class Player {
   canvas: HTMLCanvasElement;
   board: Board;
   ctx: CanvasRenderingContext2D;
-  constructor (canvas: HTMLCanvasElement, pos: Position, width: number, height: number, ctx: CanvasRenderingContext2D, board: Board){
+  constructor (
+    canvas: HTMLCanvasElement,
+    pos: Position,
+    width: number,
+    height: number,
+    board: Board
+  ){
     this.canvas = canvas;
     this.pos = pos;
     this.width = width;
@@ -43,37 +49,7 @@ export default class Player {
 
   draw(ctx: CanvasRenderingContext2D) {
     ctx.drawImage(image, this.pos.x, this.pos.y, this.width, this.height);
-    ctx.fillStyle="black";
+    ctx.fillStyle= "black";
     ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height);
   }
-  
-  // PREVIOUS CODE
-  // position: Position = { x: 0, y: 0 };
-  // board: Board;
-  // constructor(board: Board) {
-  //   this.board = board;
-  // }
-  // move(ctx: CanvasRenderingContext2D, x: number, y: number) {
-  //   // TODO: refactor!!
-  //   const prevSpace = this.board.getSpace(this.position);
-  //   this.position.x += x;
-  //   this.position.y += y;
-  //   const newSpace = this.board.getSpace(this.position);
-  //   if (prevSpace && newSpace) {
-  //     prevSpace.refreshSpace(ctx);
-  //     console.log("playerPos: ", this.position);
-  //     this.draw(ctx, newSpace.position);
-  //   } else {
-  //     this.position.x -= x;
-  //     this.position.y -= y;
-  //   }
-  // }
-
-  // draw(ctx: CanvasRenderingContext2D, pos: Position) {
-  //   // image wasn't working so temporarily the player is a black square
-  //   //ctx.drawImage(image, pos.x, pos.y, this.board.width, this.board.height);
-  //   ctx.fillStyle="black";
-  //   ctx.fillRect(pos.x, pos.y, this.board.width, this.board.height);
-  // }
-  
 }

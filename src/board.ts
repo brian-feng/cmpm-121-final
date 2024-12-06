@@ -11,55 +11,56 @@ export default class Board {
   tiles: BoardTile[];
   ctx: CanvasRenderingContext2D;
   playerPos: Position;
+  // amtHarvested: number;
   constructor(ctx: CanvasRenderingContext2D, tiles: BoardTile[]) {
     this.tiles = tiles;
     this.ctx = ctx;
-    this.playerPos = {x: 0, y: 0} // render default position if no playerTile
+    this.playerPos = { x: 0, y: 0 }; // render default position if no playerTile
     const playerTile = tiles.find((tile) => tile.hasPlayer == true);
     if (playerTile) {
-      this.playerPos = {x: playerTile.xPos, y: playerTile.yPos}
-      console.log('playerTile pos: ', playerTile.xPos, playerTile.yPos);
+      this.playerPos = { x: playerTile.xPos, y: playerTile.yPos };
     };
-    
+    // if (amtHarvested) {
+    //   this.amtHarvested = amtHarvested;
+    // } else {
+    //   this.amtHarvested = 0;
+    // }
     this.drawPlayer(ctx);
   }
-  
+
   addTile(tile: BoardTile) {
     this.tiles.push(tile);
     if (tile.tileColor == 1) this.ctx!.fillStyle = "green";
     else this.ctx!.fillStyle = "lime";
     this.ctx!.fillRect(tile.xPos, tile.yPos, tile.width, tile.height);
 
-    if(tile.cropLevel > 0) this.drawPlant(this.ctx, tile);
+    if (tile.cropLevel > 0) this.drawPlant(this.ctx, tile);
   }
 
   drawTile(ctx: CanvasRenderingContext2D, tile: BoardTile) {
-    if (tile.tileColor == 1) this.ctx!.fillStyle = "green";
-      else this.ctx!.fillStyle = "lime";
-      this.ctx!.fillRect(tile.xPos, tile.yPos, tile.width, tile.height);  
-
+    if (tile.tileColor == 1) ctx.fillStyle = "green";
+    else ctx.fillStyle = "lime";
+      ctx.fillRect(tile.xPos, tile.yPos, tile.width, tile.height);
   }
 
   advanceTime(ctx: CanvasRenderingContext2D) {
     this.tiles.forEach((tile) => {
-        // There is an advanceTime function for each tile
-        if (tile.cropLevel < 3 && tile.cropLevel > 0) {
-          if (tile.waterLevel > 0 && tile.sunlightLevel > 0) {
-            tile.plantXP += tile.waterLevel + tile.sunlightLevel;
-          }
-          if (tile.plantXP > 5) {
-            tile.cropLevel += 1;
-            tile.plantXP = 0;
-          }
+      // There is an advanceTime function for each tile
+      if (tile.cropLevel < 3 && tile.cropLevel > 0) {
+        if (tile.waterLevel > 0 && tile.sunlightLevel > 0) {
+          tile.plantXP += tile.waterLevel + tile.sunlightLevel;
         }
-        // Adjust thte sunlight and water levels
-        tile.waterLevel = this.getAdjacentWaters(tile);
-        tile.sunlightLevel = generateRandomInt(0, 3);
-  
-        // Redraw only the plant without resetting the space
-        this.refreshSpace(ctx, tile);
-        // TODO: create an advanceTime function
-      })
+        if (tile.plantXP > 5) {
+          tile.cropLevel += 1;
+          tile.plantXP = 0;
+        }
+      }
+      // Adjust thte sunlight and water levels
+      tile.waterLevel = this.getAdjacentWaters(tile);
+      tile.sunlightLevel = generateRandomInt(0, 3);
+      // Redraw only the plant without resetting the space
+      this.refreshSpace(ctx, tile);
+    });
   }
 
   getLevel3Plants() {
@@ -68,41 +69,41 @@ export default class Board {
     console.log(this.tiles);
     this.tiles.forEach((tile) => {
       if (tile.cropLevel == 3) {
-          count++;
-        }
-      });
+        count++;
+      }
+    });
     console.log(count);
     return count;
   }
   
   getAdjacentWaters(tile: BoardTile) {
-        let adjWaters: number = 0;
-        const tempX = tile.xPos;
-        const tempY = tile.yPos;
-        // const tempX = this.position.x/51;
-        // const tempY = this.position.y/51;
-        if (tempX > 1) {
-          const tempTile = this.getSpace({x: tempX - 51,y: tempY});
-          if (tempTile)
-            adjWaters += tempTile.waterLevel;
-        }
-        if (tempX < 24) {
-          const tempTile = this.getSpace({x: tempX + 51,y: tempY});
-          if (tempTile)
-            adjWaters += tempTile.waterLevel;
-        }
-        if (tempY > 1) {
-          const tempTile = this.getSpace({x: tempX,y: tempY - 51});
-          if (tempTile)
-            adjWaters += tempTile.waterLevel;
-        }
-        if (tempY < 13) {
-          const tempTile = this.getSpace({x: tempX,y: tempY + 51});
-          if (tempTile)
-            adjWaters += tempTile.waterLevel;
-        }
-        return adjWaters / 1.7;
-      }
+    let adjWaters: number = 0;
+    const tempX = tile.xPos;
+    const tempY = tile.yPos;
+    // const tempX = this.position.x/51;
+    // const tempY = this.position.y/51;
+    if (tempX > 1) {
+      const tempTile = this.getSpace({x: tempX - 51,y: tempY});
+      if (tempTile)
+        adjWaters += tempTile.waterLevel;
+    }
+    if (tempX < 24) {
+      const tempTile = this.getSpace({ x: tempX + 51, y: tempY });
+      if (tempTile)
+        adjWaters += tempTile.waterLevel;
+    }
+    if (tempY > 1) {
+      const tempTile = this.getSpace({ x: tempX, y: tempY - 51 });
+      if (tempTile)
+        adjWaters += tempTile.waterLevel;
+    }
+    if (tempY < 13) {
+      const tempTile = this.getSpace({ x: tempX, y: tempY + 51 });
+      if (tempTile)
+        adjWaters += tempTile.waterLevel;
+    }
+    return adjWaters / 1.7;
+  }
 
   getSpace(pos: Position) {
     const found = this.tiles.find(tile => tile.xPos == pos.x && tile.yPos == pos.y);
@@ -121,29 +122,7 @@ export default class Board {
         if (tile.hasPlayer) {
           this.drawPlayer(ctx);
         }
-        //tile.draw(ctx, )
-        // for (const item of this.tiles) {
-        //   // item.draw(ctx, this.position, this._width, this._height, this.cropLevel);
-        //   this.drawTile(ctx, item)
-        // }
   }
-/*
-  move(ctx: CanvasRenderingContext2D, x: number, y: number) {
-    // TODO: refactor!!
-    const prevSpace = this.board.getSpace(this.pos);
-    this.pos.x += x;
-    this.pos.y += y;
-    const newSpace = this.board.getSpace(this.pos);
-    if (prevSpace && newSpace) {
-      this.board.refreshSpace(ctx, prevSpace);
-      console.log("playerPos: ", this.pos);
-      this.draw(ctx);
-    } else {
-      this.pos.x -= x;
-      this.pos.y -= y;
-    }
-  }
-  */
 
   playerMove(ctx: CanvasRenderingContext2D, x: number, y: number){
     //const prevPos = {currX, currY};
@@ -166,11 +145,6 @@ export default class Board {
         this.playerPos.y -= y * 51;
       }
     }
-
-    // currPos.hasPlayer = false;
-    // newPos.hasPlayer = true;
-   
-    
   }
 
   drawPlayer(ctx: CanvasRenderingContext2D){
@@ -183,13 +157,30 @@ export default class Board {
     if (currentTile?.cropLevel! > 0) this.drawPlant(ctx, currentTile!);
   }
 
+  harvestHere(ctx: CanvasRenderingContext2D) {
+    const currentTile = this.getSpace(this.playerPos);
+    if (currentTile) {
+      if (currentTile.cropLevel == 3) {
+        currentTile.plantName = 0;
+        currentTile.plantColor = 0;
+        currentTile.plantXP = 0;
+        currentTile.cropLevel = 0;
+        this.refreshSpace(ctx, currentTile);
+      }
+    }
+  }
+
   placeHere(ctx: CanvasRenderingContext2D, plantName: number, plantColor: number){
     const currentTile = this.getSpace(this.playerPos);
     if (currentTile){
-      currentTile.plantName = plantName;
-      currentTile.plantColor = plantColor;
-      currentTile.cropLevel = 1;
-      this.drawPlant(ctx, currentTile);
+      if (currentTile.plantName == 0) {
+        currentTile.plantName = plantName;
+        currentTile.plantColor = plantColor;
+        currentTile.cropLevel = 1;
+        this.drawPlant(ctx, currentTile);
+      } else {
+        this.harvestHere(ctx);
+      }
     }
   }
 
@@ -205,13 +196,11 @@ export default class Board {
     }
 
     let sizePercentage = 0;
-    if(tile.cropLevel == 1){
+    if (tile.cropLevel == 1) {
       sizePercentage = 0.4;
-    }
-    else if(tile.cropLevel == 2){
+    } else if (tile.cropLevel == 2) {
       sizePercentage = 0.6;
-    }
-    else {
+    } else {
       sizePercentage = 0.8;
     }
 
@@ -222,127 +211,7 @@ export default class Board {
       tile.xPos + (tile.width - newWidth) / 2,
       tile.yPos + (tile.height - newHeight) / 2,
       newWidth,
-      newHeight
+      newHeight,
     );
   }
 }
-
-// class BoardSpace {
-//   position: Position;
-//   private _color: string;
-//   private _width: number;
-//   private _height: number;
-//   private _inventory: Array<Plant> = [];
-//   // private _boardReference: Board;
-
-//   sunlightLevel: number = generateRandomInt(0, 3);
-//   // after a turn sunlight should be lost
-//   waterLevel: number = generateRandomInt(0, 3);
-//   plantXP: number = 0;
-//   cropLevel: number = 0;
-//   harvestable: boolean = false;
-
-//   constructor(
-//     position: Position,
-//     _color: string,
-//     _width: number,
-//     _height: number,
-//     // _board: BoardTile[];
-//   ) {
-//     this._color = _color;
-//     this.position = position;
-//     this._width = _width;
-//     this._height = _height;
-//     // this._boardReference = _board;
-//     console.log("Creating: " + this.position.x / 51 + ", " + this.position.y/51);
-//   }
-
-//   changeColor(color: string) {
-//     this._color = color;
-//   }
-
-//   draw(ctx: CanvasRenderingContext2D) {
-//     ctx.fillStyle = this._color;
-//     ctx.fillRect(this.position.x, this.position.y, this._width, this._height);
-//   }
-
-//   placeHere(ctx: CanvasRenderingContext2D, plant: Plant) {
-//     this._inventory.push(plant);
-//     this.cropLevel = 1;
-//     plant.draw(ctx, this.position, this._width, this._height, this.cropLevel);
-//   }
-
-//   removeHere(ctx: CanvasRenderingContext2D){
-//     this._inventory = [];
-//     this.cropLevel = 0;
-//     ctx.fillStyle = "black";
-//     ctx.fillRect(this.position.x, this.position.y, this._width, this._height);
-//     ctx.fillStyle = this._color;
-//   }
-
-//   refreshSpace(ctx: CanvasRenderingContext2D) {
-//     this.draw(ctx);
-//     for (const item of this._inventory) {
-//       item.draw(ctx, this.position, this._width, this._height, this.cropLevel);
-//     }
-//   }
-
-
-//   //This function will need to be edited.
-//   // Currently every plant just "levels" without any input.
-//   // We need to account for water/sun/nearby plants
-//   // We also need to update incoming water and sun to be randomly changed each turn
-//   advanceTime(ctx: CanvasRenderingContext2D) {
-//     // Increase the level of the crops on this plot
-//     for (const item of this._inventory) {
-//       if (this.cropLevel < 3 && this.cropLevel > 0) {
-//         if (this.waterLevel > 0 && this.sunlightLevel > 0) {
-//           this.plantXP += this.waterLevel + this.sunlightLevel;
-//         }
-//         if (this.plantXP > 5) {
-//           this.cropLevel += 1;
-//           this.plantXP = 0;
-//         }
-//       }
-//       // Adjust thte sunlight and water levels
-//       this.waterLevel = this.getAdjacentWaters();
-//       this.sunlightLevel = generateRandomInt(0, 3);
-
-//       // Redraw only the plant without resetting the space
-//       item.draw(ctx, this.position, this._width, this._height, this.cropLevel);
-//     }
-//   }
-
-//   getAdjacentWaters() {
-//     let adjWaters: number = 0;
-//     const tempX = this.position.x/51;
-//     const tempY = this.position.y/51;
-//     // if (tempX > 1) {
-//     //   adjWaters += this._board[tempX - 1][tempY].waterLevel;
-//     // }
-//     // if (tempX < 24) {
-//     //   adjWaters += this._board[tempX + 1][tempY].waterLevel;
-//     // }
-//     // if (tempY > 1) {
-//     //   adjWaters += this._board[tempX][tempY - 1].waterLevel;
-//     // }
-//     // if (tempY < 13) {
-//     //   adjWaters += this._board[tempX][tempY + 1].waterLevel;
-//     // }
-//     return adjWaters / 2 ;
-//   }
-
-//   getPlants() {
-//     return this._inventory;
-//   }
-
-//   getWidth(){
-//     return this._width;
-//   }
-
-//   getHeight(){
-//     return this._height;
-//   }
-  
-
-// }
