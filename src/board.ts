@@ -40,7 +40,10 @@ export default class Board {
   drawTile(ctx: CanvasRenderingContext2D, tile: BoardTile) {
     if (tile.tileColor == 1) ctx.fillStyle = "green";
     else ctx.fillStyle = "lime";
-      ctx.fillRect(tile.xPos, tile.yPos, tile.width, tile.height);
+    
+    ctx.fillRect(tile.xPos, tile.yPos, tile.width, tile.height);
+
+    
   }
 
   advanceTime(ctx: CanvasRenderingContext2D) {
