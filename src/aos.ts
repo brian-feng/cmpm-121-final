@@ -105,8 +105,8 @@ function deserializeBoard(data: Uint8Array): BoardTile[] {
 export function saveGame(board: BoardTile[], fileNumber: number): void {
   
   const saveFile = "saveData" + fileNumber.toString() + "." + index.toString(); // File key for saving
-  index++;
   localStorage.setItem("saveData" + fileNumber.toString() + ".index", index.toString());
+  index++;
 
   // Convert the serialized board into a Base64 string
   const data = serializeBoard(board);
@@ -126,7 +126,7 @@ export function loadGame(fileNumber: number, canvas: HTMLCanvasElement): BoardTi
       return initializeBoard(canvas);
   }
   const saveFile = "saveData" + fileNumber.toString() + "." + index.toString(); // File key to load
-
+  console.log("Game loaded from save file: " + saveFile);
   // Retrieve Base64 string from localStorage
   const base64Data = localStorage.getItem(saveFile);
 
@@ -138,7 +138,7 @@ export function loadGame(fileNumber: number, canvas: HTMLCanvasElement): BoardTi
 
   // Decode Base64 string back into Uint8Array
   const data = decodeFromBase64(base64Data);
-  console.log(index);
+  console.log("index: " + index);
   
   // Deserialize the binary data back into BoardTile[]
   return deserializeBoard(data);
