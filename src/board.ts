@@ -43,7 +43,7 @@ export default class Board {
     
     ctx.fillRect(tile.xPos, tile.yPos, tile.width, tile.height);
 
-    
+    if(tile.cropLevel > 0) this.drawPlant(ctx, tile);
   }
 
   advanceTime(ctx: CanvasRenderingContext2D) {
@@ -214,5 +214,9 @@ export default class Board {
       newWidth,
       newHeight,
     );
+  }
+
+  setTiles(tiles: BoardTile[]) {
+    this.tiles = tiles;
   }
 }

@@ -2,8 +2,7 @@ import generateRandomInt from "./random.ts";
 import BoardTile from "./boardTile.ts";
 import Board from "./board.ts";
 
-const autoSaveStack: string[] = [];
-let index = 0;
+let index = 1;
 
 function encodeTile(tile: BoardTile, buffer: DataView, offset: number): number {
   let start = offset;
@@ -105,7 +104,9 @@ function deserializeBoard(data: Uint8Array): BoardTile[] {
 
 export function saveGame(board: BoardTile[], fileNumber: number): void {
   
-  const saveFile = "saveData" + fileNumber.toString(); // File key for saving
+  const saveFile = "saveData" + fileNumber.toString() + "." + index.toString(); // File key for saving
+  index++;
+  localStorage.setItem("saveData" + fileNumber.toString() + ".index", index.toString());
 
   // Convert the serialized board into a Base64 string
   const data = serializeBoard(board);
@@ -113,29 +114,18 @@ export function saveGame(board: BoardTile[], fileNumber: number): void {
 
   // Store in localStorage
   localStorage.setItem(saveFile, base64Data);
+  overwriteRedos(fileNumber);
 
   console.log("Game saved under save file: " + saveFile);
 }
 
-export function autoSave(board: BoardTile[]): void {
-  const saveFile = "autoSave" + autoSaveStack.length; // File key for saving
-
-  // Convert the serialized board into a Base64 string
-  const data = serializeBoard(board);
-  const base64Data = encodeToBase64(data);
-
-  // Store in localStorage
-  localStorage.setItem(saveFile, base64Data);
-
-  console.log("Game auto-saved under save file: " + saveFile);
-}
-
 export function loadGame(fileNumber: number, canvas: HTMLCanvasElement): BoardTile[] {
+  index = parseInt(localStorage.getItem("saveData" + fileNumber.toString() + ".index") || "1");
   if (fileNumber == -1) {
       console.warn("No load file provided. Creating a new board");
       return initializeBoard(canvas);
   }
-  const saveFile = "saveData" + fileNumber.toString(); // File key to load
+  const saveFile = "saveData" + fileNumber.toString() + "." + index.toString(); // File key to load
 
   // Retrieve Base64 string from localStorage
   const base64Data = localStorage.getItem(saveFile);
@@ -148,9 +138,36 @@ export function loadGame(fileNumber: number, canvas: HTMLCanvasElement): BoardTi
 
   // Decode Base64 string back into Uint8Array
   const data = decodeFromBase64(base64Data);
-
+  console.log(index);
+  
   // Deserialize the binary data back into BoardTile[]
   return deserializeBoard(data);
+}
+
+export function undo(fileNumber: number, canvas: HTMLCanvasElement): BoardTile[]{
+  if(index <= 0){
+    return [];
+  }
+  index--;
+  localStorage.setItem("saveData" + fileNumber.toString() + ".index", index.toString());
+  return loadGame(fileNumber, canvas);
+}
+
+export function redo(fileNumber: number, canvas: HTMLCanvasElement): BoardTile[] {
+  if(localStorage.getItem("saveData" + fileNumber.toString() + "." + (index+1).toString())){
+    index++;
+    localStorage.setItem("saveData" + fileNumber.toString() + ".index", index.toString());
+    return loadGame(fileNumber, canvas);
+  }
+  return [];
+}
+
+function overwriteRedos(fileNumber: number){
+  let tempIndex = index;
+  while(localStorage.getItem("saveData" + fileNumber.toString() + "." + tempIndex.toString())){ 
+    localStorage.removeItem("saveData" + fileNumber.toString() + "." + tempIndex.toString());
+    tempIndex++;
+  }
 }
 
 function encodeToBase64(data: Uint8Array): string {

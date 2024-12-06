@@ -2,7 +2,7 @@ import "./style.css";
 import Board from "./board.ts";
 import Plant from "./plant.ts";
 import Player from "./player.ts";
-import { saveGame, loadGame} from "./aos.ts";
+import { saveGame, loadGame, undo, redo} from "./aos.ts";
 import BoardTile from "./boardTile.ts";
 
 // Create the wrapper container
@@ -77,6 +77,7 @@ let currentPlant: Plant = plantSpecies[0];
 
 const loadSave: number = getFileNumber();
 const boardTiles = loadGame(loadSave, canvas);
+saveGame(boardTiles, loadSave);
 const ctx = canvas.getContext("2d");
 const board = new Board(ctx!, boardTiles);
 
@@ -92,8 +93,10 @@ if (board.tiles.length > 0) {
 // const player = new Player(canvas,board);
 let currentPlant: Plant = plantSpecies[0];
 // Set initial current plant text
-currentPlantText.textContent = "Current Plant: " + "Purple";
-
+currentPlantText.textContent = "Current Plant: ";
+if(board.getSpace(board.playerPos)?.plantName == 1) currentPlantText.textContent += "Purple";
+else if(board.getSpace(board.playerPos)?.plantName == 2) currentPlantText.textContent += "Brown";
+else currentPlantText.textContent += "White";
 // if (ctx) {
 //   board.draw(ctx);
 //   player.draw(ctx, { x: 0, y: 0 });
@@ -185,10 +188,11 @@ timeButton.innerHTML = "Advance Time";
 timeButton.addEventListener("click", () => {
   if(ctx){
     board.advanceTime(ctx);
+    saveGame(board.tiles, loadSave);
   }
   if (board.getLevel3Plants() >= 10) {
     alert("You win!");
-  }
+  }1
 });
 addSpacing(timeButton);
 wrapper.appendChild(timeButton);
@@ -209,11 +213,27 @@ undoButton.style.marginLeft = "5px";
 addSpacing(redoButton);
 undoRedoDiv.appendChild(redoButton);
 
-/*
+
 undoButton.addEventListener("click", () => {
+  const newTiles = undo(loadSave, canvas)
+  if(newTiles.length > 0){
+    board.setTiles(newTiles);
+    board.tiles.forEach(tile => {
+      board.drawTile(ctx!, tile);
+      if(tile.cropLevel > 0) board.drawPlant(ctx!, tile);
+    });
+    board.drawPlayer(ctx!);
+  }
+});
 
-}
-
-redoButton.addEventListener("click", () => {    
-  board.redo();
-}*/
+redoButton.addEventListener("click", () => {
+  const newTiles = redo(loadSave, canvas)
+  if(newTiles.length > 0){
+    board.setTiles(newTiles);
+    board.tiles.forEach(tile => {
+      board.drawTile(ctx!, tile);
+      if(tile.cropLevel > 0) board.drawPlant(ctx!, tile);
+    });
+    board.drawPlayer(ctx!);
+  }
+});
