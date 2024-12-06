@@ -16,7 +16,7 @@
  - F1.d - Undo simply increments the undo stack pointer, which is saved to the variable index, which is loaded from local storage when refreshing the game, then loads the save that the stack pointer points to. As a consequence, saving a game results in all saveData entities with a saveNumber higher than index being flushed. Redo is also simple, decrementing index to load the previous autosave. 
 
 ### Reflection
-We retroactively redefined the properties of a boardTile to accommodate for the AoS format. For example, we had to remove plantColor and calculate its color upon creation using plantName to make space for other information. 
+We retroactively redefined the properties of a boardTile to accommodate for the AoS format. For example, we had to remove plantColor and calculate its color upon creation using plantName to make space for other information. This was key to saving data because when serialized, strings take up a lot more space than numbers. While it took a lot of work going through all of our different files in order to accomodate this change, we are glad that we made this change. The biggest takeaway from this is that we had many variables that we didn't actually *need* when we could repurpose the variables we already had to have multiple different uses.
 
 ## Devlog Entry - 12/2/24
 ### How we satisfied the software requirements.
