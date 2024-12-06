@@ -163,7 +163,7 @@ export default class Board {
   harvestHere(ctx: CanvasRenderingContext2D) {
     const currentTile = this.getSpace(this.playerPos);
     if (currentTile) {
-      if (currentTile.cropLevel == 3) {
+      if (currentTile.cropLevel > 0) {
         currentTile.plantName = 0;
         currentTile.plantXP = 0;
         currentTile.cropLevel = 0;

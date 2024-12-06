@@ -10,11 +10,11 @@ We at first wanted to make our game based around the idea of having a hand of ca
 ## Devlog Entry - 11/15/24
 
 ### The Team:
-Tools Lead: Brian Feng
-Engine Co-Lead: Eion Ling
-Engine Co-Lead: Connor Lowe
-Design Co-Lead: Charlize Serrano
-Design Co-Lead: Annie McKay 
+ - Tools Lead: Brian Feng
+ - Engine Co-Lead: Eion Ling
+ - Engine Co-Lead: Connor Lowe
+ - Design Co-Lead: Charlize Serrano
+ - Design Co-Lead: Annie McKay 
 
 ### Tools & Materials:
   Our main engine/framework that we plan to use is TypeScript + HTML5. We chose to use this since we’re familiar with working with it from this CMPM 121 class. 
