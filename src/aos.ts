@@ -1,6 +1,10 @@
 import generateRandomInt from "./random.ts";
 import BoardTile from "./boardTile.ts";
 import Board from "./board.ts";
+
+const autoSaveStack: string[] = [];
+let index = 0;
+
 function encodeTile(tile: BoardTile, buffer: DataView, offset: number): number {
   let start = offset;
 
@@ -16,7 +20,7 @@ function encodeTile(tile: BoardTile, buffer: DataView, offset: number): number {
   buffer.setUint8(start++, tile.hasPlayer ? 1 : 0);
 
   buffer.setInt32(start, tile.plantName, true); start += 4;
-  buffer.setInt32(start, tile.plantColor, true); start += 4;
+  buffer.setInt32(start, tile.index, true); start += 4;
   buffer.setInt32(start, tile.plantXP, true); start += 4;
 
   return start;
@@ -37,7 +41,7 @@ function decodeTile(buffer: DataView, offset: number): [BoardTile, number] {
   const hasPlayer = buffer.getUint8(start++) === 1;
 
   const plantName = buffer.getInt32(start, true); start += 4;
-  const plantColor = buffer.getInt32(start, true); start += 4;
+  const index = buffer.getInt32(start, true); start += 4;
   const plantXP = buffer.getInt32(start, true); start += 4;
 
   const tile: BoardTile = {
@@ -51,7 +55,7 @@ function decodeTile(buffer: DataView, offset: number): [BoardTile, number] {
       height,
       hasPlayer,
       plantName,
-      plantColor,
+      index,
       plantXP,
   };
 
@@ -100,6 +104,7 @@ function deserializeBoard(data: Uint8Array): BoardTile[] {
 }
 
 export function saveGame(board: BoardTile[], fileNumber: number): void {
+  
   const saveFile = "saveData" + fileNumber.toString(); // File key for saving
 
   // Convert the serialized board into a Base64 string
@@ -110,6 +115,19 @@ export function saveGame(board: BoardTile[], fileNumber: number): void {
   localStorage.setItem(saveFile, base64Data);
 
   console.log("Game saved under save file: " + saveFile);
+}
+
+export function autoSave(board: BoardTile[]): void {
+  const saveFile = "autoSave" + autoSaveStack.length; // File key for saving
+
+  // Convert the serialized board into a Base64 string
+  const data = serializeBoard(board);
+  const base64Data = encodeToBase64(data);
+
+  // Store in localStorage
+  localStorage.setItem(saveFile, base64Data);
+
+  console.log("Game auto-saved under save file: " + saveFile);
 }
 
 export function loadGame(fileNumber: number, canvas: HTMLCanvasElement): BoardTile[] {
@@ -175,7 +193,6 @@ function initializeBoard(canvas: HTMLCanvasElement): BoardTile[] {
       const height = SPACEHEIGHT;
       const hasPlayer = false;
       const plantName = 0; // plant name 0 since no plant here
-      const plantColor = 0; // plant color 0 since no plant here
       const plantXP = 0; // plant has no XP since no plant here
 
       const tile: BoardTile = {
@@ -189,7 +206,7 @@ function initializeBoard(canvas: HTMLCanvasElement): BoardTile[] {
         height,
         hasPlayer,
         plantName,
-        plantColor,
+        index,
         plantXP,
       };
 

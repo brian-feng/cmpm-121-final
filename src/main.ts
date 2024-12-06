@@ -2,7 +2,7 @@ import "./style.css";
 import Board from "./board.ts";
 import Plant from "./plant.ts";
 import Player from "./player.ts";
-import { saveGame, loadGame } from "./aos.ts";
+import { saveGame, loadGame} from "./aos.ts";
 import BoardTile from "./boardTile.ts";
 
 // Create the wrapper container
@@ -138,7 +138,7 @@ document.addEventListener("keydown", (event) => {
         // }
         // break;
 
-        board.placeHere(ctx, currentPlantID, currentPlantID);
+        board.placeHere(ctx, currentPlantID);
     }
 
     //draw plant here
@@ -193,6 +193,7 @@ timeButton.addEventListener("click", () => {
 addSpacing(timeButton);
 wrapper.appendChild(timeButton);
 
+// Undo and Redo Buttons
 const undoRedoDiv = document.createElement("div")
 wrapper.appendChild(undoRedoDiv);
 
@@ -207,3 +208,12 @@ redoButton.innerHTML = "Redo";
 undoButton.style.marginLeft = "5px";
 addSpacing(redoButton);
 undoRedoDiv.appendChild(redoButton);
+
+/*
+undoButton.addEventListener("click", () => {
+
+}
+
+redoButton.addEventListener("click", () => {    
+  board.redo();
+}*/

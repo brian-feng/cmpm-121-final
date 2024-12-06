@@ -162,7 +162,6 @@ export default class Board {
     if (currentTile) {
       if (currentTile.cropLevel == 3) {
         currentTile.plantName = 0;
-        currentTile.plantColor = 0;
         currentTile.plantXP = 0;
         currentTile.cropLevel = 0;
         this.refreshSpace(ctx, currentTile);
@@ -170,12 +169,11 @@ export default class Board {
     }
   }
 
-  placeHere(ctx: CanvasRenderingContext2D, plantName: number, plantColor: number){
+  placeHere(ctx: CanvasRenderingContext2D, plantName: number){
     const currentTile = this.getSpace(this.playerPos);
     if (currentTile){
       if (currentTile.plantName == 0) {
         currentTile.plantName = plantName;
-        currentTile.plantColor = plantColor;
         currentTile.cropLevel = 1;
         this.drawPlant(ctx, currentTile);
       } else {
@@ -185,10 +183,10 @@ export default class Board {
   }
 
   drawPlant(ctx: CanvasRenderingContext2D, tile: BoardTile){
-    if(tile.plantColor == 1){
+    if(tile.plantName == 1){
       ctx.fillStyle = "purple";
     }
-    else if (tile.plantColor == 2){
+    else if (tile.plantName == 2){
       ctx.fillStyle = "brown";
     }
     else{
