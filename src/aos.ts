@@ -114,7 +114,7 @@ export function saveGame(board: BoardTile[], fileNumber: number): void {
 
   // Store in localStorage
   localStorage.setItem(saveFile, base64Data);
-  overwriteRedos(fileNumber);
+  if(localStorage.getItem(saveFile)) overwriteRedos(fileNumber);
 
   console.log("Game saved under save file: " + saveFile);
 }

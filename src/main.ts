@@ -77,7 +77,7 @@ let currentPlant: Plant = plantSpecies[0];
 
 const loadSave: number = getFileNumber();
 const boardTiles = loadGame(loadSave, canvas);
-saveGame(boardTiles, loadSave);
+//saveGame(boardTiles, loadSave);
 const ctx = canvas.getContext("2d");
 const board = new Board(ctx!, boardTiles);
 
