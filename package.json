@@ -7,7 +7,9 @@
   "browserslist": [
     "last 2 versions",
     "not dead",
-    "chrome >= 89",
-    "firefox >= 89"
+    "chrome >= 91",
+    "firefox >= 91",
+    "edge >= 91",
+    "safari >= 15.4"
   ]
 }
