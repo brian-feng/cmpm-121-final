@@ -9,5 +9,5 @@
   "compilerOptions": {
     "lib": ["es2015", "dom", "esnext"]
   },
-  "nodeModulesDir": true
+  "nodeModulesDir": "auto" 
 }

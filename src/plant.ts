@@ -10,8 +10,6 @@ import BoardTile from "./boardTile.ts";
 // automatically plant it on instantiation
 // }
 
-
-
 interface PlantType {
   index: number;
   color: string;
@@ -51,10 +49,28 @@ function increaseXPForAdjacentSamePlants(Board: Board, tileParam: BoardTile) {
 }
 
 const plants: PlantType[] = [
-  { index: 1, color: "white", name: "White", gainXP: (board: Board, tileParam: BoardTile) => increaseXPForAdjacentPlants(board, tileParam) },
-  { index: 2, color: "purple", name: "Purple", gainXP: (board: Board, tileParam: BoardTile) => increaseXPForAdjacentSamePlants(board, tileParam) },
+  {
+    index: 1,
+    color: "white",
+    name: "White",
+    gainXP: (board: Board, tileParam: BoardTile) =>
+      increaseXPForAdjacentPlants(board, tileParam),
+  },
+  {
+    index: 2,
+    color: "purple",
+    name: "Purple",
+    gainXP: (board: Board, tileParam: BoardTile) =>
+      increaseXPForAdjacentSamePlants(board, tileParam),
+  },
   { index: 3, color: "brown", name: "Brown", gainXP: () => 10 },
-  { index: 4, color: "red", name: "Red", gainXP: (board: Board, tileParam: BoardTile) => increaseXPForEachNonPlantTile(board, tileParam) },
+  {
+    index: 4,
+    color: "red",
+    name: "Red",
+    gainXP: (board: Board, tileParam: BoardTile) =>
+      increaseXPForEachNonPlantTile(board, tileParam),
+  },
 ];
 
 export function getPlantsArray(): PlantType[] {
@@ -62,23 +78,26 @@ export function getPlantsArray(): PlantType[] {
 }
 
 export function getPlantByIndex(index: number): PlantType {
-  return plants[index-1];
+  return plants[index - 1];
 }
 
 export function getPlantNameByIndex(index: number): string {
-  return plants[index-1].name;
+  return plants[index - 1].name;
 }
 
 export function getPlantColorByIndex(index: number): string {
-  return plants[index-1].color;
+  return plants[index - 1].color;
 }
 
-export function getXPIncreaseByIndex(index: number, board: Board, tile: BoardTile): number {
-  const XPAmount = plants[index-1].gainXP(board, tile);
+export function getXPIncreaseByIndex(
+  index: number,
+  board: Board,
+  tile: BoardTile,
+): number {
+  const XPAmount = plants[index - 1].gainXP(board, tile);
   console.log(XPAmount);
   return XPAmount;
 }
-
 
 //Might be useless now, but not sure if its ready to delete
 
@@ -91,9 +110,15 @@ export default class Plant {
   }
   placePlant() {
   }
-  draw(ctx: CanvasRenderingContext2D, pos: Position, w: number, h: number, level: number) {
+  draw(
+    ctx: CanvasRenderingContext2D,
+    pos: Position,
+    w: number,
+    h: number,
+    level: number,
+  ) {
     ctx.fillStyle = this.color.toString();
-  
+
     // Calculate the plant size based on the level
     let sizePercentage = 0;
     switch (level) {
@@ -109,18 +134,17 @@ export default class Plant {
       default:
         sizePercentage = 0.4; // Default to level 1 if the level is invalid
     }
-  
+
     // Width and height based on %
     const newWidth = w * sizePercentage;
     const newHeight = h * sizePercentage;
-  
+
     // Center the plant within the space
     ctx.fillRect(
-      pos.x + (w - newWidth) / 2,  // Horizontal center alignment
+      pos.x + (w - newWidth) / 2, // Horizontal center alignment
       pos.y + (h - newHeight) / 2, // Vertical center alignment
       newWidth,
-      newHeight
+      newHeight,
     );
   }
-  
 }

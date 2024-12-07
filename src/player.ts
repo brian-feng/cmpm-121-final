@@ -14,13 +14,13 @@ export default class Player {
   canvas: HTMLCanvasElement;
   board: Board;
   ctx: CanvasRenderingContext2D;
-  constructor (
+  constructor(
     canvas: HTMLCanvasElement,
     pos: Position,
     width: number,
     height: number,
-    board: Board
-  ){
+    board: Board,
+  ) {
     this.canvas = canvas;
     this.pos = pos;
     this.width = width;
@@ -49,7 +49,7 @@ export default class Player {
 
   draw(ctx: CanvasRenderingContext2D) {
     ctx.drawImage(image, this.pos.x, this.pos.y, this.width, this.height);
-    ctx.fillStyle= "black";
+    ctx.fillStyle = "black";
     ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height);
   }
 }

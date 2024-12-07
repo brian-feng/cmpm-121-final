@@ -2,10 +2,10 @@ import "./style.css";
 import Board from "./board.ts";
 import "./plant.ts";
 import Player from "./player.ts";
-import { saveGame, loadGame, undo, redo} from "./aos.ts";
+import { loadGame, redo, saveGame, undo } from "./aos.ts";
 import BoardTile from "./boardTile.ts";
 import { getPlantByIndex, getPlantsArray } from "./plant.ts";
-import {GameSettings, initGameSettings} from "./externalDSLParser.ts"
+import { GameSettings, initGameSettings } from "./externalDSLParser.ts";
 
 // Call the function to initialize the settings
 const gameSettings = await initGameSettings();
@@ -54,7 +54,7 @@ currentPlantID = 1;
 
 getPlantsArray().map((plant) => {
   const button = document.createElement("button");
-  const name = plant.name
+  const name = plant.name;
 
   button.innerHTML = name;
   button.style.margin = "10px";
@@ -65,7 +65,6 @@ getPlantsArray().map((plant) => {
   });
   buttonContainer.appendChild(button);
 });
-
 
 // Old Setting Up Board and Player
 // const board = new Board(canvas);
@@ -86,11 +85,11 @@ const boardTiles = loadGame(loadSave, canvas, gameSettings!);
 const ctx = canvas.getContext("2d");
 const board = new Board(ctx!, boardTiles, gameSettings!);
 
-console.log('boardtiles', boardTiles);
+console.log("boardtiles", boardTiles);
 if (board.tiles.length > 0) {
-  board.tiles.forEach(tile => {
+  board.tiles.forEach((tile) => {
     board.drawTile(ctx!, tile);
-    if(tile.cropLevel > 0) board.drawPlant(ctx!, tile);
+    if (tile.cropLevel > 0) board.drawPlant(ctx!, tile);
   });
   board.drawPlayer(ctx!);
 }
@@ -153,9 +152,8 @@ document.addEventListener("keydown", (event) => {
     // if (space) {
     //     plant.draw(ctx, {x: space.xPos, y: space.yPos}, space.width, space.height, space.cropLevel);
     //   };
-    }
   }
-);
+});
 
 function getFileNumber(): number {
   let playerInput = prompt("Enter the save file number (1-3): ");
@@ -174,15 +172,15 @@ function getFileNumber(): number {
   return fileNumber;
 }
 
-function addSpacing(button: HTMLButtonElement){
+function addSpacing(button: HTMLButtonElement) {
   button.style.marginTop = "10px";
 }
 
 const saveButton = document.createElement("button");
 saveButton.innerHTML = "Save game";
 saveButton.addEventListener("click", () => {
-    const number = getFileNumber();
-    if (number != -1) saveGame(board.tiles, number);
+  const number = getFileNumber();
+  if (number != -1) saveGame(board.tiles, number);
 });
 wrapper.appendChild(saveButton);
 
@@ -190,19 +188,20 @@ wrapper.appendChild(saveButton);
 const timeButton = document.createElement("button");
 timeButton.innerHTML = "Advance Time";
 timeButton.addEventListener("click", () => {
-  if(ctx){
+  if (ctx) {
     board.advanceTime(ctx);
     saveGame(board.tiles, loadSave);
   }
   if (board.getLevel3Plants() >= gameSettings?.win.win_condition!) {
     alert("You win!");
-  }1
+  }
+  1;
 });
 addSpacing(timeButton);
 wrapper.appendChild(timeButton);
 
 // Undo and Redo Buttons
-const undoRedoDiv = document.createElement("div")
+const undoRedoDiv = document.createElement("div");
 wrapper.appendChild(undoRedoDiv);
 
 const undoButton = document.createElement("button");
@@ -217,26 +216,25 @@ undoButton.style.marginLeft = "5px";
 addSpacing(redoButton);
 undoRedoDiv.appendChild(redoButton);
 
-
 undoButton.addEventListener("click", () => {
-  const newTiles = undo(loadSave, canvas, gameSettings!)
-  if(newTiles.length > 0){
+  const newTiles = undo(loadSave, canvas, gameSettings!);
+  if (newTiles.length > 0) {
     board.setTiles(newTiles);
-    board.tiles.forEach(tile => {
+    board.tiles.forEach((tile) => {
       board.drawTile(ctx!, tile);
-      if(tile.cropLevel > 0) board.drawPlant(ctx!, tile);
+      if (tile.cropLevel > 0) board.drawPlant(ctx!, tile);
     });
     board.drawPlayer(ctx!);
   }
 });
 
 redoButton.addEventListener("click", () => {
-  const newTiles = redo(loadSave, canvas, gameSettings!)
-  if(newTiles.length > 0){
+  const newTiles = redo(loadSave, canvas, gameSettings!);
+  if (newTiles.length > 0) {
     board.setTiles(newTiles);
-    board.tiles.forEach(tile => {
+    board.tiles.forEach((tile) => {
       board.drawTile(ctx!, tile);
-      if(tile.cropLevel > 0) board.drawPlant(ctx!, tile);
+      if (tile.cropLevel > 0) board.drawPlant(ctx!, tile);
     });
     board.drawPlayer(ctx!);
   }
