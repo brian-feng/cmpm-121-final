@@ -3,5 +3,12 @@
     "@iarna/toml": "^2.2.5",
     "toml": "^3.0.0",
     "toml-js": "^0.0.8"
-  }
+  },
+  "browserslist": [
+  "last 2 versions",
+  "not dead",
+  "chrome >= 89",
+  "firefox >= 89"
+  ]
+
 }
