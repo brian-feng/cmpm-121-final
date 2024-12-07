@@ -19,12 +19,8 @@ export interface GameSettings {
 // Function to load the TOML file using fetch
 async function loadTOMLFile(url: string): Promise<GameSettings | null> {
   try {
-    // Only use Deno for loading environment variables or other Deno-specific actions
-    const basePath = typeof Deno !== "undefined"
-      ? Deno.env.get("REPO_NAME")
-      : "/project"; // Fallback for the browser
-
-    const response = await fetch(basePath + url);
+    // Use the raw GitHub URL to fetch the TOML file
+    const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`Failed to fetch TOML file: ${response.statusText}`);
     }
@@ -48,7 +44,10 @@ async function loadTOMLFile(url: string): Promise<GameSettings | null> {
 
 // Example usage to initialize game settings
 export async function initGameSettings(): Promise<GameSettings | null> {
-  const gameSettings = await loadTOMLFile("/externalDSL.toml"); // Adjust the path as needed
+  // Use the raw URL for the TOML file hosted on GitHub
+  const url = "https://raw.githubusercontent.com/brian-feng/cmpm-121-final/main/public/externalDSL.toml";
+  
+  const gameSettings = await loadTOMLFile(url);
   if (gameSettings) {
     console.log("Win Condition:", gameSettings.win.win_condition);
     console.log("Human Instructions:", gameSettings.win.human_instructions);
