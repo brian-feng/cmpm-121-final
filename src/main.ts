@@ -5,6 +5,10 @@ import Player from "./player.ts";
 import { saveGame, loadGame, undo, redo} from "./aos.ts";
 import BoardTile from "./boardTile.ts";
 import { getPlantByIndex, getPlantsArray } from "./plant.ts";
+import {GameSettings, initGameSettings} from "./externalDSLParser.ts"
+
+// Call the function to initialize the settings
+const gameSettings = await initGameSettings();
 
 // Create the wrapper container
 const container = document.getElementById("app") || document.body;
@@ -16,8 +20,8 @@ container.appendChild(wrapper);
 
 // Set up canvas
 const canvas = document.createElement("canvas");
-canvas.width = 1280;
-canvas.height = 720;
+canvas.width = gameSettings?.board_info.board_size_pixels[0]!;
+canvas.height = gameSettings?.board_info.board_size_pixels[1]!;
 wrapper.appendChild(canvas);
 
 // Show current plant
@@ -27,6 +31,14 @@ currentPlantText.style.marginTop = "10px";
 currentPlantText.style.fontSize = "18px";
 currentPlantText.style.fontWeight = "bold";
 wrapper.appendChild(currentPlantText);
+
+// win condition text
+const winText = document.createElement("p");
+winText.textContent = gameSettings?.win.human_instructions!;
+winText.style.marginTop = "10px";
+winText.style.fontSize = "18px";
+winText.style.fontWeight = "bold";
+wrapper.appendChild(winText);
 
 // Create a button container
 const buttonContainer = document.createElement("div");
@@ -38,6 +50,7 @@ wrapper.appendChild(buttonContainer);
 const currentPlantChange = new Event("current-plant-changed");
 
 let currentPlantID: number;
+currentPlantID = 1;
 
 getPlantsArray().map((plant) => {
   const button = document.createElement("button");
@@ -68,10 +81,10 @@ let currentPlant: Plant = plantSpecies[0];
 */
 
 const loadSave: number = getFileNumber();
-const boardTiles = loadGame(loadSave, canvas);
+const boardTiles = loadGame(loadSave, canvas, gameSettings!);
 //saveGame(boardTiles, loadSave);
 const ctx = canvas.getContext("2d");
-const board = new Board(ctx!, boardTiles);
+const board = new Board(ctx!, boardTiles, gameSettings!);
 
 console.log('boardtiles', boardTiles);
 if (board.tiles.length > 0) {
@@ -132,7 +145,6 @@ document.addEventListener("keydown", (event) => {
         //   board.getSpace(board.playerPos)?.removeHere(ctx);
         // }
         // break;
-
         board.placeHere(ctx, currentPlantID);
     }
 
@@ -182,7 +194,7 @@ timeButton.addEventListener("click", () => {
     board.advanceTime(ctx);
     saveGame(board.tiles, loadSave);
   }
-  if (board.getLevel3Plants() >= 10) {
+  if (board.getLevel3Plants() >= gameSettings?.win.win_condition!) {
     alert("You win!");
   }1
 });
@@ -207,7 +219,7 @@ undoRedoDiv.appendChild(redoButton);
 
 
 undoButton.addEventListener("click", () => {
-  const newTiles = undo(loadSave, canvas)
+  const newTiles = undo(loadSave, canvas, gameSettings!)
   if(newTiles.length > 0){
     board.setTiles(newTiles);
     board.tiles.forEach(tile => {
@@ -219,7 +231,7 @@ undoButton.addEventListener("click", () => {
 });
 
 redoButton.addEventListener("click", () => {
-  const newTiles = redo(loadSave, canvas)
+  const newTiles = redo(loadSave, canvas, gameSettings!)
   if(newTiles.length > 0){
     board.setTiles(newTiles);
     board.tiles.forEach(tile => {

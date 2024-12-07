@@ -1,0 +1,8 @@
+[win]
+  win_condition = 10
+  human_instructions = "Grow at least 10 plants."
+
+[board_info]
+  board_size_pixels = [1280, 720]
+  board_colors = ["green", "lime"]
+  plant_colors = ["purple", "brown", "white", "red"]

@@ -3,6 +3,7 @@ import "./plant.ts";
 import Position from "./position.ts";
 import BoardTile from "./boardTile.ts";
 import { getPlantColorByIndex, getXPIncreaseByIndex } from "./plant.ts";
+import { initGameSettings, type GameSettings } from "./externalDSLParser.ts";
 
 const SPACEWIDTH: number = 50;
 const SPACEHEIGHT: number = 50;
@@ -12,8 +13,10 @@ export default class Board {
   tiles: BoardTile[];
   ctx: CanvasRenderingContext2D;
   playerPos: Position;
+  gameSettings: GameSettings | null;
   // amtHarvested: number;
-  constructor(ctx: CanvasRenderingContext2D, tiles: BoardTile[]) {
+  constructor(ctx: CanvasRenderingContext2D, tiles: BoardTile[], gameSettings: GameSettings) {
+    this.gameSettings = gameSettings;
     this.tiles = tiles;
     this.ctx = ctx;
     this.playerPos = { x: 0, y: 0 }; // render default position if no playerTile
@@ -31,16 +34,16 @@ export default class Board {
 
   addTile(tile: BoardTile) {
     this.tiles.push(tile);
-    if (tile.tileColor == 1) this.ctx!.fillStyle = "green";
-    else this.ctx!.fillStyle = "lime";
+    if (tile.tileColor == 1) this.ctx!.fillStyle = this.gameSettings!.board_info.board_colors[0]!;
+    else this.ctx!.fillStyle = this.gameSettings!.board_info.board_colors[1]!;
     this.ctx!.fillRect(tile.xPos, tile.yPos, tile.width, tile.height);
 
     if (tile.cropLevel > 0) this.drawPlant(this.ctx, tile);
   }
 
   drawTile(ctx: CanvasRenderingContext2D, tile: BoardTile) {
-    if (tile.tileColor == 1) ctx.fillStyle = "green";
-    else ctx.fillStyle = "lime";
+    if (tile.tileColor == 1) ctx.fillStyle = this.gameSettings!.board_info.board_colors[0]!;
+    else ctx.fillStyle = this.gameSettings!.board_info.board_colors[1]!;
     
     ctx.fillRect(tile.xPos, tile.yPos, tile.width, tile.height);
 

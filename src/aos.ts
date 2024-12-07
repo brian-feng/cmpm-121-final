@@ -1,6 +1,7 @@
 import generateRandomInt from "./random.ts";
 import BoardTile from "./boardTile.ts";
 import Board from "./board.ts";
+import type { GameSettings } from "./externalDSLParser.ts";
 
 let index = 1;
 
@@ -119,11 +120,11 @@ export function saveGame(board: BoardTile[], fileNumber: number): void {
   console.log("Game saved under save file: " + saveFile);
 }
 
-export function loadGame(fileNumber: number, canvas: HTMLCanvasElement): BoardTile[] {
+export function loadGame(fileNumber: number, canvas: HTMLCanvasElement, gameSettings: GameSettings): BoardTile[] {
   index = parseInt(localStorage.getItem("saveData" + fileNumber.toString() + ".index") || "1");
   if (fileNumber == -1) {
       console.warn("No load file provided. Creating a new board");
-      return initializeBoard(canvas);
+      return initializeBoard(canvas, gameSettings);
   }
   const saveFile = "saveData" + fileNumber.toString() + "." + index.toString(); // File key to load
   console.log("Game loaded from save file: " + saveFile);
@@ -133,7 +134,7 @@ export function loadGame(fileNumber: number, canvas: HTMLCanvasElement): BoardTi
   // If no save file exists, initialize a new board
   if (!base64Data) {
       console.warn("No save data found. Creating a new save.");
-      return initializeBoard(canvas);
+      return initializeBoard(canvas, gameSettings);
   }
 
   // Decode Base64 string back into Uint8Array
@@ -144,20 +145,20 @@ export function loadGame(fileNumber: number, canvas: HTMLCanvasElement): BoardTi
   return deserializeBoard(data);
 }
 
-export function undo(fileNumber: number, canvas: HTMLCanvasElement): BoardTile[]{
+export function undo(fileNumber: number, canvas: HTMLCanvasElement, gameSettings: GameSettings): BoardTile[]{
   if(index <= 0){
     return [];
   }
   index--;
   localStorage.setItem("saveData" + fileNumber.toString() + ".index", index.toString());
-  return loadGame(fileNumber, canvas);
+  return loadGame(fileNumber, canvas, gameSettings);
 }
 
-export function redo(fileNumber: number, canvas: HTMLCanvasElement): BoardTile[] {
+export function redo(fileNumber: number, canvas: HTMLCanvasElement, gameSettings: GameSettings): BoardTile[] {
   if(localStorage.getItem("saveData" + fileNumber.toString() + "." + (index+1).toString())){
     index++;
     localStorage.setItem("saveData" + fileNumber.toString() + ".index", index.toString());
-    return loadGame(fileNumber, canvas);
+    return loadGame(fileNumber, canvas, gameSettings);
   }
   return [];
 }
@@ -189,14 +190,14 @@ function decodeFromBase64(data: string): Uint8Array {
 const SPACEWIDTH: number = 50;
 const SPACEHEIGHT: number = 50;
 // initializes the board with default values
-function initializeBoard(canvas: HTMLCanvasElement): BoardTile[] {
+function initializeBoard(canvas: HTMLCanvasElement, gameSettings: GameSettings): BoardTile[] {
   const tiles: BoardTile[] = [];
   const ctx = canvas.getContext("2d");
 
   if(ctx) console.log('ctx found in aos');
   else console.log('ctx null in aos');
   
-  const board = new Board(ctx!, tiles);
+  const board = new Board(ctx!, tiles, gameSettings);
   for (let x = 0; x < canvas.width - SPACEWIDTH; x += SPACEWIDTH + 1) {
     for (let y = 0; y < canvas.height - SPACEHEIGHT; y += SPACEHEIGHT + 1) {
       // Select a random color
