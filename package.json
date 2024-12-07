@@ -5,10 +5,9 @@
     "toml-js": "^0.0.8"
   },
   "browserslist": [
-  "last 2 versions",
-  "not dead",
-  "chrome >= 89",
-  "firefox >= 89"
+    "last 2 versions",
+    "not dead",
+    "chrome >= 89",
+    "firefox >= 89"
   ]
-
 }
