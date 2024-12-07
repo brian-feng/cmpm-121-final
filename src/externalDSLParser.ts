@@ -1,4 +1,4 @@
-import * as toml from 'toml-js';
+import * as toml from 'npm:toml-js';
 
 export interface WinData {
   win_condition: number;
