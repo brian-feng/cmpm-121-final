@@ -8,7 +8,7 @@ export default interface BoardTile {
     width: number;
     height: number;
     hasPlayer: boolean; //true if player is on this tile
-    plantName: number; //our plant names are just "Plant X" anyway; save as number
+    plantID: number; //our plant names are just "Plant X" anyway; save as number
     index: number; //index in the autoSaveStack e.g. saveFile1.index
     plantXP: number; // the level of the plant
   }

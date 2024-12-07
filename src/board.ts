@@ -1,7 +1,8 @@
 import generateRandomInt from "./random.ts";
-import Plant from "./plant.ts";
+import "./plant.ts";
 import Position from "./position.ts";
 import BoardTile from "./boardTile.ts";
+import { getPlantColorByIndex, getXPIncreaseByIndex } from "./plant.ts";
 
 const SPACEWIDTH: number = 50;
 const SPACEHEIGHT: number = 50;
@@ -50,10 +51,11 @@ export default class Board {
     this.tiles.forEach((tile) => {
       // There is an advanceTime function for each tile
       if (tile.cropLevel < 3 && tile.cropLevel > 0) {
+        //!Sunlight and water level might need tweaking, confusing when plants dont grow properly
         if (tile.waterLevel > 0 && tile.sunlightLevel > 0) {
-          tile.plantXP += tile.waterLevel + tile.sunlightLevel;
+          if (tile.plantID != 0) tile.plantXP += getXPIncreaseByIndex(tile.plantID, this, tile);
         }
-        if (tile.plantXP > 5) {
+        if (tile.plantXP >= 10) {
           tile.cropLevel += 1;
           tile.plantXP = 0;
         }
@@ -78,7 +80,35 @@ export default class Board {
     console.log(count);
     return count;
   }
+
+  getAdjacentTiles(tile: BoardTile): BoardTile[] {
+    let adjTiles: BoardTile[] = [];
+    const tempX = tile.xPos;
+    const tempY = tile.yPos;
+    if (tempX > 1) {
+      const tempTile = this.getSpace({ x: tempX - 51, y: tempY });
+      if (tempTile)
+        adjTiles.push(tempTile);
+    }
+    if (tempX < 24 * 51) {
+      const tempTile = this.getSpace({ x: tempX + 51, y: tempY });
+      if (tempTile)
+        adjTiles.push(tempTile);
+    }
+    if (tempY > 1) {
+      const tempTile = this.getSpace({ x: tempX, y: tempY - 51 });
+      if (tempTile)
+        adjTiles.push(tempTile);
+    }
+    if (tempY < 13 * 51) {
+      const tempTile = this.getSpace({ x: tempX, y: tempY + 51 });
+      if (tempTile)
+        adjTiles.push(tempTile);
+    }
+    return adjTiles;
+  }
   
+  // Might delete this function
   getAdjacentWaters(tile: BoardTile) {
     let adjWaters: number = 0;
     const tempX = tile.xPos;
@@ -164,7 +194,7 @@ export default class Board {
     const currentTile = this.getSpace(this.playerPos);
     if (currentTile) {
       if (currentTile.cropLevel > 0) {
-        currentTile.plantName = 0;
+        currentTile.plantID = 0;
         currentTile.plantXP = 0;
         currentTile.cropLevel = 0;
         this.refreshSpace(ctx, currentTile);
@@ -172,11 +202,11 @@ export default class Board {
     }
   }
 
-  placeHere(ctx: CanvasRenderingContext2D, plantName: number){
+  placeHere(ctx: CanvasRenderingContext2D, plantID: number){
     const currentTile = this.getSpace(this.playerPos);
     if (currentTile){
-      if (currentTile.plantName == 0) {
-        currentTile.plantName = plantName;
+      if (currentTile.plantID == 0) {
+        currentTile.plantID = plantID;
         currentTile.cropLevel = 1;
         this.drawPlant(ctx, currentTile);
       } else {
@@ -186,15 +216,7 @@ export default class Board {
   }
 
   drawPlant(ctx: CanvasRenderingContext2D, tile: BoardTile){
-    if(tile.plantName == 1){
-      ctx.fillStyle = "purple";
-    }
-    else if (tile.plantName == 2){
-      ctx.fillStyle = "brown";
-    }
-    else{
-      ctx.fillStyle = "white";
-    }
+    if (tile.plantID != 0) ctx.fillStyle = getPlantColorByIndex(tile.plantID);
 
     let sizePercentage = 0;
     if (tile.cropLevel == 1) {

@@ -18,7 +18,7 @@ function encodeTile(tile: BoardTile, buffer: DataView, offset: number): number {
 
   buffer.setUint8(start++, tile.hasPlayer ? 1 : 0);
 
-  buffer.setInt32(start, tile.plantName, true); start += 4;
+  buffer.setInt32(start, tile.plantID, true); start += 4;
   buffer.setInt32(start, tile.index, true); start += 4;
   buffer.setInt32(start, tile.plantXP, true); start += 4;
 
@@ -39,7 +39,7 @@ function decodeTile(buffer: DataView, offset: number): [BoardTile, number] {
 
   const hasPlayer = buffer.getUint8(start++) === 1;
 
-  const plantName = buffer.getInt32(start, true); start += 4;
+  const plantID = buffer.getInt32(start, true); start += 4;
   const index = buffer.getInt32(start, true); start += 4;
   const plantXP = buffer.getInt32(start, true); start += 4;
 
@@ -53,7 +53,7 @@ function decodeTile(buffer: DataView, offset: number): [BoardTile, number] {
       width,
       height,
       hasPlayer,
-      plantName,
+      plantID,
       index,
       plantXP,
   };
@@ -209,7 +209,7 @@ function initializeBoard(canvas: HTMLCanvasElement): BoardTile[] {
       const width = SPACEWIDTH;
       const height = SPACEHEIGHT;
       const hasPlayer = false;
-      const plantName = 0; // plant name 0 since no plant here
+      const plantID = 0; // plant name 0 since no plant here
       const plantXP = 0; // plant has no XP since no plant here
 
       const tile: BoardTile = {
@@ -222,7 +222,7 @@ function initializeBoard(canvas: HTMLCanvasElement): BoardTile[] {
         width,
         height,
         hasPlayer,
-        plantName,
+        plantID,
         index,
         plantXP,
       };

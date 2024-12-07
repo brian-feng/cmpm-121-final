@@ -1,9 +1,10 @@
 import "./style.css";
 import Board from "./board.ts";
-import Plant from "./plant.ts";
+import "./plant.ts";
 import Player from "./player.ts";
 import { saveGame, loadGame, undo, redo} from "./aos.ts";
 import BoardTile from "./boardTile.ts";
+import { getPlantByIndex, getPlantsArray } from "./plant.ts";
 
 // Create the wrapper container
 const container = document.getElementById("app") || document.body;
@@ -35,27 +36,18 @@ buttonContainer.style.marginTop = "10px";
 wrapper.appendChild(buttonContainer);
 
 const currentPlantChange = new Event("current-plant-changed");
-const plantSpecies: Plant[] = [
-  new Plant(1, 1), //1 is purple
-  new Plant(2, 2), //2 is brown
-  new Plant(3, 3), //3 is white
-];
 
 let currentPlantID: number;
 
-plantSpecies.map((plant) => {
+getPlantsArray().map((plant) => {
   const button = document.createElement("button");
-  let name = "";
-
-  if(plant.name == 1) name = "Purple";
-  else if (plant.name == 2) name = "Brown";
-  else name = "White";
+  const name = plant.name
 
   button.innerHTML = name;
   button.style.margin = "10px";
   button.addEventListener("click", () => {
     dispatchEvent(currentPlantChange);
-    currentPlantID = plant.color;
+    currentPlantID = plant.index;
     currentPlantText.textContent = "Current Plant: " + name;
   });
   buttonContainer.appendChild(button);
@@ -91,12 +83,12 @@ if (board.tiles.length > 0) {
 }
 
 // const player = new Player(canvas,board);
-let currentPlant: Plant = plantSpecies[0];
+let currentPlant = getPlantByIndex(0);
 // Set initial current plant text
-currentPlantText.textContent = "Current Plant: ";
-if(board.getSpace(board.playerPos)?.plantName == 1) currentPlantText.textContent += "Purple";
-else if(board.getSpace(board.playerPos)?.plantName == 2) currentPlantText.textContent += "Brown";
-else currentPlantText.textContent += "White";
+currentPlantText.textContent = "Current Plant: White";
+// if(board.getSpace(board.playerPos)?.plantName == 1) currentPlantText.textContent += "Purple";
+// else if(board.getSpace(board.playerPos)?.plantName == 2) currentPlantText.textContent += "Brown";
+// else currentPlantText.textContent += "White";
 // if (ctx) {
 //   board.draw(ctx);
 //   player.draw(ctx, { x: 0, y: 0 });
