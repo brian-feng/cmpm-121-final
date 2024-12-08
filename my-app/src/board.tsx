@@ -1,72 +1,86 @@
+import React, { useEffect, useState } from 'react';
+import { Stage, Container, Graphics, Text } from '@pixi/react';
+import { TextStyle } from 'pixi.js';
+import { BoardTile } from './boardTile';
+import Position from './position';
+import BoardContext from './BoardContext';
 
-import { BlurFilter, TextStyle } from 'pixi.js';
-import { Stage, Container, Sprite, Text } from '@pixi/react';
+const WIDTH: number = 50;
+const HEIGHT: number = 50;
 
+function Board({boardTiles}) {
+    const [tiles, setTiles] = useState<BoardTile[]>([
+        { xPos: 0, yPos: 0, width: WIDTH, height: HEIGHT, color: 0x00ff00, hasPlayer: false },
+        { xPos: 50, yPos: 0, width: WIDTH, height: HEIGHT, color: 0xff0000, hasPlayer: false },
+        { xPos: 100, yPos: 0, width: WIDTH, height: HEIGHT, color: 0xff0000, hasPlayer: false },
 
-function Board(){
+        // this will be set by AoS
+    ]);
+
+    // pass in some sort of board context here for later
+    // AoS will most likely be passed into BoardContext and then spawn in Board from there it'll build BoardTiles
+    
+    const [playerPos, setPlayerPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+
+    const drawTile = (tile: BoardTile) => {
+        return (
+            <Graphics
+                key={`${tile.xPos}-${tile.yPos}`}
+                draw={g => {
+                    g.beginFill(tile.tileColor);
+                    g.lineStyle(2, 0xffd900, 2);
+                    g.drawRect(tile.xPos, tile.yPos, tile.width, tile.height);
+                    g.endFill();
+                }}
+            />
+        );
+    };
 
     return (
-      <Stage width={800} height={600} options={{ background: 0x1099bb }}>
-        {/* <Sprite image={bunnyUrl} x={300} y={150} />
-        <Sprite image={bunnyUrl} x={500} y={150} />
-        <Sprite image={bunnyUrl} x={400} y={200} /> */}
-  
-        <Container x={200} y={200}>
-          <Text
-            text="Hello World"
-            anchor={0.5}
-            x={220}
-            y={150}
-            style={
-              new TextStyle({
-                align: 'center',
-                fill: '0xffffff',
-                fontSize: 50,
-                letterSpacing: 20,
-                dropShadow: true,
-                dropShadowColor: '#E72264',
-                dropShadowDistance: 6,
-              })
-            }
-          />
-        </Container>
-      </Stage>
+        <Stage width={800} height={600} options={{ background: 0x1099bb }}>
+            <Container>
+
+                {/* <BoardContext.Provider value={{
+                    playerPos, 
+                }}>
+                    <Plant>
+                </BoardContext.Provider> */}
+                {tiles.map(drawTile)}
+                    <Graphics
+                        draw={g => {
+                            g.beginFill(0x000000); // Player color, black
+                            g.drawRect(playerPos.x, playerPos.y, 50, 50); // Adjust size as needed
+                            g.endFill();
+                    }}
+                />
+            </Container>
+        </Stage>
     );
-  };
+};
+
+export default Board;
   
-  export default Board;
-  
 
-// const App: React.FC = () => {
-//     const pixiContainer = useRef<HTMLDivElement>(null);
+    // const handleKeyDown = (event: KeyboardEvent) => {
+    //     switch (event.key) {
+    //         case 'ArrowUp':
+    //             setPlayerPos(pos => ({ x: pos.x, y: pos.y - 50 }));
+    //             break;
+    //         case 'ArrowDown':
+    //             setPlayerPos(pos => ({ x: pos.x, y: pos.y + 50 }));
+    //             break;
+    //         case 'ArrowLeft':
+    //             setPlayerPos(pos => ({ x: pos.x - 50, y: pos.y }));
+    //             break;
+    //         case 'ArrowRight':
+    //             setPlayerPos(pos => ({ x: pos.x + 50, y: pos.y }));
+    //             break;
+    //     }
+    // };
 
-//     useEffect(() => {
-//         // Create a Pixi.js Application
-//         const app = new PIXI.Application({
-//             width: 800, // Width of the canvas
-//             height: 600, // Height of the canvas
-//             backgroundColor: 0x1099bb, // Background color
-//         });
-
-//         // Append the Pixi.js canvas to the container
-//         if (pixiContainer.current) {
-//             pixiContainer.current.appendChild(app.view);
-//         }
-
-//         // Create a red rectangle
-//         const graphics = new PIXI.Graphics();
-//         graphics.beginFill(0xde3249); // Red color
-//         graphics.drawRect(50, 50, 100, 100); // Position and size
-//         graphics.endFill();
-//         app.stage.addChild(graphics);
-
-//         // Clean up on unmount
-//         return () => {
-//             app.destroy(true, { children: true });
-//         };
-//     }, []);
-
-//     return <div ref={pixiContainer} style={{ width: '100%', height: '100%' }} />;
-// };
-
-// export default App;
+    // useEffect(() => {
+    //     window.addEventListener('keydown', handleKeyDown);
+    //     return () => {
+    //         window.removeEventListener('keydown', handleKeyDown);
+    //     };
+    // }, []);
