@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "@iarna/toml": "^2.2.5",
+    "@pixi/react": "^7.1.2",
+    "pixi.js": "^8.6.3",
     "toml": "^3.0.0",
     "toml-js": "^0.0.8"
   },
