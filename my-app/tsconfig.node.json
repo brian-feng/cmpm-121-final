@@ -16,9 +16,13 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
+  // "include": [
+  //   "vite.config.ts",
+  //   "server/**/*.ts",  // Example: Include server-side TypeScript files
+  //   "build/**/*.ts"    // Example: Include TypeScript files related to your build process
+  // ]
   "include": [
-    "vite.config.ts",
-    "server/**/*.ts",  // Example: Include server-side TypeScript files
-    "build/**/*.ts"    // Example: Include TypeScript files related to your build process
-  ]
+  "src/**/*.ts",
+  "vite.config.ts"
+]
 }
