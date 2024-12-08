@@ -9,7 +9,7 @@
  - F0.e - same as last week
  - F0.f - same as last week
  - F0.g - same as last week
- - F1.a - Our game’s grid is saved in an AoS format. Each tile of our game contains data from a structure, which contains a lot of data the tile needs such as position, water and sun levels, plant information, tile color, the plant data, and if the tile has the player. All of those previous values are numbers, and the player being on the tile is a boolean. This means that each structure uses 41 bytes of data, since we have 10 numbers (4 bytes each) and 1 boolean value (1 byte). Since our grid is a 25 wide and 14 tall board of tiles, this means we have 350 structures in our array, for a total size of 14350 bytes in the save file. Below is a visual representation of our breakdown for a single index of our array.
+ - F1.a - Our game’s grid is saved in an AoS format. Each tile of our game contains data from a structure, which contains a lot of data the tile needs such as position, water and sun levels, plant information, tile color, the plant data, and if the tile has the player. All of those previous values are numbers, and the player being on the tile is a boolean. This means that each structure uses 45 bytes of data, since we have 10 numbers (4 bytes each) and 1 boolean value (1 byte). Since our grid is a 25 wide and 14 tall board of tiles, this means we have 350 structures in our array, for a total size of 15750 bytes in the save file. Below is a visual representation of our breakdown for a single index of our array.
 ![F1.a data structure diagram](./f1_a_diagram.png)
  - F1.b - We introduced a button into our game labeled as “Save game” which prompts the player to choose a save slot, allowing them to choose between save slots 1, 2, and 3. This works by saving our data to local storage using a key in the format of “saveData[fileNumber].[saveNumber]” where file number is the entered save slot. 
  - F1.c - The autosave system is tied with the undo and redo system as well as the advanceTime button. By default, the game creates autosaves in the format “saveData[fileNumber].[saveNumber]” using localStorage. The currently active saveNumber is saved in localStorage for each fileNumber as well and is used to load the state of the previous session while allowing the previous undo and redo stack to still be functional. A boardTile array is encoded into base64 to save space in saves, and decoded when loading. An autosave is generated every time the advanceTime button is pressed.
@@ -28,11 +28,11 @@ We at first wanted to make our game based around the idea of having a hand of ca
 ## Devlog Entry - 11/15/24
 
 ### The Team:
-Tools Lead: Brian Feng
-Engine Co-Lead: Eion Ling
-Engine Co-Lead: Connor Lowe
-Design Co-Lead: Charlize Serrano
-Design Co-Lead: Annie McKay 
+ - Tools Lead: Brian Feng
+ - Engine Co-Lead: Eion Ling
+ - Engine Co-Lead: Connor Lowe
+ - Design Co-Lead: Charlize Serrano
+ - Design Co-Lead: Annie McKay 
 
 ### Tools & Materials:
   Our main engine/framework that we plan to use is TypeScript + HTML5. We chose to use this since we’re familiar with working with it from this CMPM 121 class. 
