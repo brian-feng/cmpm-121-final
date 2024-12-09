@@ -10,13 +10,13 @@ function Player() {
         }
     }, [playerPos]);
     return (
-        <Sprite
-            image="/pixi-react/img/coin.png"
-            scale={{ x: 0.5, y: 0.5 }}
-            anchor={0.5}
-            x={playerPos.x}
-            y={playerPos.y}
-        />
+        // <Sprite
+        //     image="/pixi-react/img/coin.png"
+        //     scale={{ x: 0.5, y: 0.5 }}
+        //     anchor={0.5}
+        //     x={playerPos.x}
+        //     y={playerPos.y}
+        // />
     )
 }
 export default Player;

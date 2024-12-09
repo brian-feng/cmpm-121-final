@@ -3,33 +3,32 @@ import './App.css';
 import BoardContext from './BoardContext';
 import GameBoard from './gameboard';
 import { Stage } from '@pixi/react';
-
-const WIDTH = 800;
-const HEIGHT = 600;
-const width = WIDTH;
-const height = HEIGHT;
-const stageProps = {
-  height,
-  width,
-  options: {
-    backgroundAlpha: 0,
-    antialias: true,
-  },
-};
+import { useEffect } from 'react';
+import { GameSettings } from './externalDSLParser';
+import { BoardTile } from './boardTile';
+import generateRandomInt from './random';
+import Board from './board';
 const App = () => {
+  const [tiles, setTiles] = useState([])
   const [playerPos, setPlayerPos] = useState({});
-
+  const [gameSettings, setGameSettings] = useState<GameSettings>({
+    win: {
+      win_condition: 10, // Example: Win when you reach 10 points or complete one full cycle
+      human_instructions: "Reach the goal within the time limit!", // Basic instruction message
+    },
+    board_info: {
+      board_size_pixels: [800, 600], // Default board size in pixels
+      board_colors: ["#ffffff", "#00ff00"], // Default board colors, white and green
+      plant_colors: ["#ff0000", "#0000ff", "#ffff00"], // Default plant colors, red, blue, yellow
+    },
+  });
+  
   return (
-    <Stage {...stageProps}>
-        <BoardContext.Provider value={{ playerPos, setPlayerPos }}>
-        <GameBoard canvaswidth={WIDTH} canvasheight={HEIGHT} />
+      <BoardContext.Provider value={{ playerPos, setPlayerPos }}>
+          <GameBoard gameSettings={gameSettings}/>
+          {/* <Board boardTiles={tiles}></Board> */}
       </BoardContext.Provider>
-    </Stage>
   );
 };
-
-// App.propTypes = {
-
-// }
 
 export default App;
