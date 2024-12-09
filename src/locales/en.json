@@ -1,0 +1,15 @@
+{
+    "language_name": "English",
+    "current_plant": "Current Plant: ",
+    "instructions": "Grow at least 10 plants.",
+    "plant1Color": "White",
+    "plant2Color": "Purple",
+    "plant3Color": "Brown",
+    "plant4Color": "Red",
+    "save_game": "Save game",
+    "advance_time": "Advance Time",
+    "undo": "Undo",
+    "redo": "Redo",
+    "enter_save": "Enter the save file number (1-3):",
+    "invalid": "Invalid input. "
+}

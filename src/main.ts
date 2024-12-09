@@ -6,9 +6,11 @@ import { loadGame, redo, saveGame, undo } from "./aos.ts";
 import BoardTile from "./boardTile.ts";
 import { getPlantByIndex, getPlantsArray } from "./plant.ts";
 import { GameSettings, initGameSettings } from "./externalDSLParser.ts";
+import { setLocale, to_current_language} from "./i18n.ts";
 
 // Call the function to initialize the settings
 const gameSettings = await initGameSettings();
+setLocale("ar");
 
 // Create the wrapper container
 const container = document.getElementById("app") || document.body;
@@ -26,7 +28,7 @@ wrapper.appendChild(canvas);
 
 // Show current plant
 const currentPlantText = document.createElement("p");
-currentPlantText.textContent = "Current Plant: None";
+currentPlantText.textContent = to_current_language("current_plant") + to_current_language("plant1Color");
 currentPlantText.style.marginTop = "10px";
 currentPlantText.style.fontSize = "18px";
 currentPlantText.style.fontWeight = "bold";
@@ -34,7 +36,7 @@ wrapper.appendChild(currentPlantText);
 
 // win condition text
 const winText = document.createElement("p");
-winText.textContent = gameSettings?.win.human_instructions!;
+winText.textContent = to_current_language("instructions");
 winText.style.marginTop = "10px";
 winText.style.fontSize = "18px";
 winText.style.fontWeight = "bold";
@@ -47,10 +49,16 @@ buttonContainer.style.justifyContent = "center";
 buttonContainer.style.marginTop = "10px";
 wrapper.appendChild(buttonContainer);
 
+
 const currentPlantChange = new Event("current-plant-changed");
 
 let currentPlantID: number;
 currentPlantID = 1;
+
+function updateCurrentPlantText(){
+  currentPlantText.textContent = to_current_language("current_plant") + to_current_language("plant"+currentPlantID+"Color");
+}
+
 
 getPlantsArray().map((plant) => {
   const button = document.createElement("button");
@@ -61,7 +69,7 @@ getPlantsArray().map((plant) => {
   button.addEventListener("click", () => {
     dispatchEvent(currentPlantChange);
     currentPlantID = plant.index;
-    currentPlantText.textContent = "Current Plant: " + name;
+    updateCurrentPlantText()
   });
   buttonContainer.appendChild(button);
 });
@@ -97,7 +105,7 @@ if (board.tiles.length > 0) {
 // const player = new Player(canvas,board);
 let currentPlant = getPlantByIndex(0);
 // Set initial current plant text
-currentPlantText.textContent = "Current Plant: White";
+currentPlantText.textContent = to_current_language("current_plant") + to_current_language("plant1Color");
 // if(board.getSpace(board.playerPos)?.plantName == 1) currentPlantText.textContent += "Purple";
 // else if(board.getSpace(board.playerPos)?.plantName == 2) currentPlantText.textContent += "Brown";
 // else currentPlantText.textContent += "White";
@@ -107,62 +115,93 @@ currentPlantText.textContent = "Current Plant: White";
 // }
 
 // // Handle player movement
+const movementButtonContainer = document.createElement("div");
+movementButtonContainer.style.display = "flex";
+movementButtonContainer.style.justifyContent = "left";
+movementButtonContainer.style.marginTop = "5x";
+wrapper.appendChild(movementButtonContainer);
 
-document.addEventListener("keydown", (event) => {
-  if (ctx) {
-    switch (event.key) {
-      case "ArrowUp":
-        board.playerMove(ctx, 0, -1);
-        break;
-      case "ArrowDown":
-        board.playerMove(ctx, 0, 1);
-        break;
-      case "ArrowLeft":
-        board.playerMove(ctx, -1, 0);
-        break;
-      case "ArrowRight":
-        board.playerMove(ctx, 1, 0);
-        break;
-      case "w":
-        board.playerMove(ctx, 0, -1);
-        break;
-      case "a":
-        board.playerMove(ctx, -1, 0);
-        break;
-      case "s":
-        board.playerMove(ctx, 0, 1);
-        break;
-      case "d":
-        board.playerMove(ctx, 1, 0);
-        break;
-      case " ":
-        event.preventDefault(); // Prevent the default spacebar action (scrolling, etc.)
-        // if(board.getSpace(board.playerPos)?.getPlants().length == 0) {
-        //   board.getSpace(board.playerPos)?.placeHere(ctx, currentPlant);
-        // }
-        // else{
-        //   board.getSpace(board.playerPos)?.removeHere(ctx);
-        // }
-        // break;
-        board.placeHere(ctx, currentPlantID);
-    }
+//Movement button function
+function createMovementButton(x: number, y: number, content: string){
+  const movementButton = document.createElement("button");
+  movementButton.addEventListener("click", () => {
+    if (ctx != null) board.playerMove(ctx, x, y);
+  })
+  movementButton.textContent = content;
+  movementButtonContainer.append(movementButton);
+  
+}
 
-    //draw plant here
-    const space = board.getSpace(board.playerPos);
-    // if (space) {
-    //     plant.draw(ctx, {x: space.xPos, y: space.yPos}, space.width, space.height, space.cropLevel);
-    //   };
-  }
-});
+createMovementButton(0,-1,"⬆️");
+createMovementButton(0,1,"⬇️");
+createMovementButton(-1,0,"⬅️");
+createMovementButton(1,0,"➡️");
+
+const plantButton = document.createElement("button");
+plantButton.addEventListener("click", () => {
+  if (ctx) board.placeHere(ctx, currentPlantID);
+})
+plantButton.textContent = "🌱";
+movementButtonContainer.append(plantButton);
+
+
+// document.addEventListener("keydown", (event) => {
+//   if (ctx) {
+//     switch (event.key) {
+//       case "ArrowUp":
+//         board.playerMove(ctx, 0, -1);
+//         break;
+//       case "ArrowDown":
+//         board.playerMove(ctx, 0, 1);
+//         break;
+//       case "ArrowLeft":
+//         board.playerMove(ctx, -1, 0);
+//         break;
+//       case "ArrowRight":
+//         board.playerMove(ctx, 1, 0);
+//         break;
+//       case "w":
+//         board.playerMove(ctx, 0, -1);
+//         break;
+//       case "a":
+//         board.playerMove(ctx, -1, 0);
+//         break;
+//       case "s":
+//         board.playerMove(ctx, 0, 1);
+//         break;
+//       case "d":
+//         board.playerMove(ctx, 1, 0);
+//         break;
+//       case " ":
+//         event.preventDefault(); // Prevent the default spacebar action (scrolling, etc.)
+//         // if(board.getSpace(board.playerPos)?.getPlants().length == 0) {
+//         //   board.getSpace(board.playerPos)?.placeHere(ctx, currentPlant);
+//         // }
+//         // else{
+//         //   board.getSpace(board.playerPos)?.removeHere(ctx);
+//         // }
+//         // break;
+//         board.placeHere(ctx, currentPlantID);
+//     }
+
+//     //draw plant here
+//     // const space = board.getSpace(board.playerPos);
+//     // if (space) {
+//     //     plant.draw(ctx, {x: space.xPos, y: space.yPos}, space.width, space.height, space.cropLevel);
+//     //   };
+//   }
+// });
 
 function getFileNumber(): number {
-  let playerInput = prompt("Enter the save file number (1-3): ");
+  let enterSave = to_current_language("enter_save");
+  let invalidSave = to_current_language("invalid");
+  let playerInput = prompt(enterSave);
   if (playerInput === null) {
     return -1;
   }
   let fileNumber = parseInt(playerInput);
   while (isNaN(fileNumber) || fileNumber < 1 || fileNumber > 3) {
-    playerInput = prompt("Invalid input. Enter the save file number (1-3): ");
+    playerInput = prompt(invalidSave + "\n" + enterSave);
     if (playerInput === null) {
       return -1;
     }
@@ -173,20 +212,24 @@ function getFileNumber(): number {
 }
 
 function addSpacing(button: HTMLButtonElement) {
-  button.style.marginTop = "10px";
+  button.style.marginTop = "5px";
+  button.style.marginLeft = "3px";
+  button.style.marginRight = "3px";
+  button.style.marginBottom = "5px";
 }
 
 const saveButton = document.createElement("button");
-saveButton.innerHTML = "Save game";
+saveButton.innerHTML = to_current_language("save_game");
 saveButton.addEventListener("click", () => {
   const number = getFileNumber();
   if (number != -1) saveGame(board.tiles, number);
 });
 wrapper.appendChild(saveButton);
+addSpacing(saveButton);
 
 // Advance time
 const timeButton = document.createElement("button");
-timeButton.innerHTML = "Advance Time";
+timeButton.innerHTML = to_current_language("advance_time");
 timeButton.addEventListener("click", () => {
   if (ctx) {
     board.advanceTime(ctx);
@@ -205,13 +248,13 @@ const undoRedoDiv = document.createElement("div");
 wrapper.appendChild(undoRedoDiv);
 
 const undoButton = document.createElement("button");
-undoButton.innerHTML = "Undo";
+undoButton.innerHTML = to_current_language("undo");
 undoButton.style.marginRight = "5px";
 addSpacing(undoButton);
 undoRedoDiv.appendChild(undoButton);
 
 const redoButton = document.createElement("button");
-redoButton.innerHTML = "Redo";
+redoButton.innerHTML = to_current_language("redo");
 undoButton.style.marginLeft = "5px";
 addSpacing(redoButton);
 undoRedoDiv.appendChild(redoButton);
@@ -239,3 +282,45 @@ redoButton.addEventListener("click", () => {
     board.drawPlayer(ctx!);
   }
 });
+
+const languageDiv = document.createElement("div");
+wrapper.appendChild(languageDiv);
+
+const englishButton = document.createElement("button");
+englishButton.innerHTML = "English";
+englishButton.style.marginLeft = "5px";
+addSpacing(englishButton);
+languageDiv.appendChild(englishButton);
+englishButton.addEventListener("click", () => {
+  setLocale("en");
+  updateAllText();
+});
+
+const arabicButton = document.createElement("button");
+arabicButton.innerHTML = "عربي";
+arabicButton.style.marginLeft = "5px";
+addSpacing(arabicButton);
+languageDiv.appendChild(arabicButton);
+arabicButton.addEventListener("click", () => {
+  setLocale("ar");
+  updateAllText();
+});
+
+const chineseButton = document.createElement("button");
+chineseButton.innerHTML = "中文";
+chineseButton.style.marginLeft = "5px";
+addSpacing(chineseButton);
+languageDiv.appendChild(chineseButton);
+chineseButton.addEventListener("click", () => {
+  setLocale("zh");
+  updateAllText();
+});
+
+function updateAllText(){
+  saveButton.innerHTML = to_current_language("save_game");
+  timeButton.innerHTML = to_current_language("advance_time");
+  undoButton.innerHTML = to_current_language("undo");
+  redoButton.innerHTML = to_current_language("redo");
+  winText.textContent = to_current_language("instructions");
+  updateCurrentPlantText();
+}

@@ -1,0 +1,15 @@
+{
+    "language_name": "中文",
+    "current_plant": "现有工厂：",
+    "instructions": "种植至少 10 株植物。",
+    "plant1Color": "白色",
+    "plant2Color": "紫色",
+    "plant3Color": "棕色",
+    "plant4Color": "红色",
+    "save_game": "保存游戏",
+    "advance_time": "提前时间",
+    "undo": "撤消",
+    "redo": "重做",
+    "enter_save": "输入保存文件编号(1-3):",
+    "invalid": "输入无效. "
+}

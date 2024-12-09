@@ -1,10 +1,16 @@
 {
   "version": "4",
   "specifiers": {
+    "jsr:@std/cli@*": "1.0.8",
     "npm:@iarna/toml@^2.2.5": "2.2.5",
     "npm:toml-js@^0.0.8": "0.0.8",
     "npm:toml@3": "3.0.0",
     "npm:vite@*": "5.4.8"
+  },
+  "jsr": {
+    "@std/cli@1.0.8": {
+      "integrity": "3762d8dc9a373715c08d871c38d45e637b25266f013a1d0bbe560bca409de94e"
+    }
   },
   "npm": {
     "@esbuild/aix-ppc64@0.21.5": {
@@ -216,6 +222,28 @@
         "rollup"
       ]
     }
+  },
+  "redirects": {
+    "https://deno.land/x/i18next/index.js": "https://deno.land/x/i18next@v24.0.5/index.js"
+  },
+  "remote": {
+    "https://deno.land/std@0.224.0/assert/assert_exists.ts": "43420cf7f956748ae6ed1230646567b3593cb7a36c5a5327269279c870c5ddfd",
+    "https://deno.land/std@0.224.0/assert/assertion_error.ts": "ba8752bd27ebc51f723702fac2f54d3e94447598f54264a6653d6413738a8917",
+    "https://deno.land/std@0.224.0/flags/mod.ts": "88553267f34519c8982212185339efdb2d2e62c159ec558f47eb50c8952a6be3",
+    "https://deno.land/x/i18next@v24.0.5/BackendConnector.js": "0ac56337bae9aa8cf72985f79db7973cec6dfeef1424458af651ad4936251242",
+    "https://deno.land/x/i18next@v24.0.5/EventEmitter.js": "0269fdda12ebd2eeb6dbeececdf9f72595e99b27a35e983c72d2b8b65fa6446c",
+    "https://deno.land/x/i18next@v24.0.5/Formatter.js": "656680552ed6cd7c7e721525e436102e2f279626c9d2c8c44778c84e4b10b533",
+    "https://deno.land/x/i18next@v24.0.5/Interpolator.js": "6f08d7e275d0044298a7cb93cf56304dae6f27eda4e749a4002b4e22aecf6fd3",
+    "https://deno.land/x/i18next@v24.0.5/LanguageUtils.js": "a0da9a71cceeb32906c86f30f15afeccbe5a526feead81022259c230afead994",
+    "https://deno.land/x/i18next@v24.0.5/PluralResolver.js": "1daca441838cb4c315472e24ab7c883ea66dcd18567b51bad5de898d2dfa8001",
+    "https://deno.land/x/i18next@v24.0.5/ResourceStore.js": "2b47489ad61920a89d3bbb453668422b81cbfe900490a943d821e77a24d3397e",
+    "https://deno.land/x/i18next@v24.0.5/Translator.js": "79f3e88bee4303e8993f893eb84b573dc19cae809ad3a9d189804af7207a2bce",
+    "https://deno.land/x/i18next@v24.0.5/defaults.js": "5cf91c2ad53e8e8ad019c6d7614bacb4ebe247bdaa623a0f579f9f11a7b54758",
+    "https://deno.land/x/i18next@v24.0.5/i18next.js": "14de7b1f49f4286005b908959d0d4d510d2a1a86ff7adce84f806b5751682d35",
+    "https://deno.land/x/i18next@v24.0.5/index.js": "2b3174388a937f60c0ad24442585a747886eb0deacc0cbaddf18609d2032b0c4",
+    "https://deno.land/x/i18next@v24.0.5/logger.js": "46388d2892a929595c260723d02e2d92ddc606f51ff6da668f77fbe6a66270ed",
+    "https://deno.land/x/i18next@v24.0.5/postProcessor.js": "1088032122e4f8df94b04edb3030a2e5d646110db3d0251d420198d25a73a1fe",
+    "https://deno.land/x/i18next@v24.0.5/utils.js": "d4b88344730c1dc0c0c5a8e7bf3cb23c46dc693c8b870d29c973d14197bb6ee9"
   },
   "workspace": {
     "packageJson": {

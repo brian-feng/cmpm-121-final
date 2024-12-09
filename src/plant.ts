@@ -43,27 +43,27 @@ const plants: PlantType[] = [
   {
     index: 1,
     color: "white",
-    name: "White",
+    name: "⚪",
     gainXP: (board: Board, tileParam: BoardTile) =>
       increaseXPForAdjacentPlants(board, tileParam),
   },
   {
     index: 2,
     color: "purple",
-    name: "Purple",
+    name: "🟣",
     gainXP: (board: Board, tileParam: BoardTile) =>
       increaseXPForAdjacentSamePlants(board, tileParam),
   },
   {
     index: 3,
     color: "brown",
-    name: "Brown",
+    name: "🟤",
     gainXP: () => 10, // Fixed XP gain
   },
   {
     index: 4,
     color: "red",
-    name: "Red",
+    name: "🔴",
     gainXP: (board: Board, tileParam: BoardTile) =>
       increaseXPForEachNonPlantTile(board, tileParam),
   },

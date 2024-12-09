@@ -1,0 +1,15 @@
+{
+    "language_name": "عربي",
+    "current_plant": "المصنع الحالي: ",
+    "instructions": "زراعة ما لا يقل عن 10 نباتات",
+    "plant1Color": "أبيض",
+    "plant2Color": "أرجواني",
+    "plant3Color": "بني",
+    "plant4Color": "أحمر",
+    "save_game": "حفظ اللعبة",
+    "advance_time": "وقت مسبق",
+    "undo": "تراجع",
+    "redo": "إعادة",
+    "enter_save": "أدخل رقم ملف الحفظ (1-3):",
+    "invalid": " .إدخال غير صالح"
+}
