@@ -10,7 +10,7 @@ import { setLocale, to_current_language} from "./i18n.ts";
 
 // Call the function to initialize the settings
 const gameSettings = await initGameSettings();
-setLocale("ar");
+setLocale("en");
 
 // Create the wrapper container
 const container = document.getElementById("app") || document.body;

@@ -2,7 +2,7 @@
   "name": "My Lame Offline Mobile Plant Game",
   "short_name": "🌱",
   "description": "Our awesome plant game where you can grow plants and remove plants.",
-  "start_url": "/index.html",
+  "start_url": "/cmpm-121-final/index.html",
   "display": "fullscreen",
   "icons": [{
     "sizes": "128x128",
