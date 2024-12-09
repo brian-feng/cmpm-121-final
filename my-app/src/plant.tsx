@@ -21,7 +21,7 @@ function Plant({ position}) { // fix later not reading position type?
         console.log("Growing plant on tile:", tile);
         if (tile.waterLevel > 0 && tile.sunlightLevel > 0) {
             if (tile.plantId !== 0) { // Makes sure theres not a plant on tile already
-                plantXP += 
+                plantXP += 1;
 
             }
         }
