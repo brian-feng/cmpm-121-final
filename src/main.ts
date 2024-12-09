@@ -8,6 +8,8 @@ import { getPlantByIndex, getPlantsArray } from "./plant.ts";
 import { GameSettings, initGameSettings } from "./externalDSLParser.ts";
 import { setLocale, to_current_language} from "./i18n.ts";
 
+// icon sourced from  https://www.flaticon.com/free-icon/plant_4147953
+
 // Call the function to initialize the settings
 const gameSettings = await initGameSettings();
 setLocale("en");
