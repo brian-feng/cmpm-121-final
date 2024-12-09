@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Sprite } from '@pixi/react';
 import BoardContext from './BoardContext';
 function Player() {
-    const {playerPos} = React.useContext(BoardContext);
-
+    const {playerPos} = useContext(BoardContext);
     React.useEffect(() => {
         // change the location of the player
         return () => {
@@ -12,12 +11,12 @@ function Player() {
     }, [playerPos]);
     return (
         <Sprite
-                image="/pixi-react/img/coin.png"
-                scale={{ x: 0.5, y: 0.5 }}
-                anchor={0.5}
-                x={playerPos.x}
-                y={playerPos.y}
-            />
+            image="/pixi-react/img/coin.png"
+            scale={{ x: 0.5, y: 0.5 }}
+            anchor={0.5}
+            x={playerPos.x}
+            y={playerPos.y}
+        />
     )
 }
 export default Player;

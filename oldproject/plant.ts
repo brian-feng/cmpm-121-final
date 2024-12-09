@@ -1,4 +1,4 @@
-import Position from "../my-app/src/position.ts";
+import Position from "../my-app/src/position.tsx";
 import Board from "./board.ts";
 import BoardTile from "./boardTile.ts";
 

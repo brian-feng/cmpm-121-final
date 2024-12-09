@@ -1,15 +1,31 @@
+import { useState } from 'react';
 import './App.css';
-import Board from './board';
 import BoardContext from './BoardContext';
-import { BoardTile } from './boardTile';
-// possibly use here?
+import GameBoard from './gameboard';
+import { Stage } from '@pixi/react';
+const WIDTH = 800;
+const HEIGHT = 600;
 
 const App = () => {
-  const boardTiles: Array<BoardTile> = [];
+  const [playerPos, setPlayerPos] = useState({});
+
   return (
-    <div>
-        <Board boardTiles={boardTiles}></Board>
-    </div>
+    <Stage
+      width={WIDTH}
+      height={HEIGHT}
+      raf={false}
+      renderOnComponentChange={false}
+      options={{ backgroundColor: 0xFF0000, antialias: true }}
+    >
+        <BoardContext.Provider value={{ playerPos, setPlayerPos }}>
+        <GameBoard canvaswidth={WIDTH} canvasheight={HEIGHT} />
+      </BoardContext.Provider>
+    </Stage>
   );
 };
+
+// App.propTypes = {
+
+// }
+
 export default App;

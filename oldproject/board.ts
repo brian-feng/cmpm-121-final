@@ -1,6 +1,6 @@
 import generateRandomInt from "./random.ts";
 import "./plant.ts";
-import Position from "../my-app/src/position.ts";
+import Position from "../my-app/src/position.tsx";
 import { BoardTile } from "./boardTile.ts";
 import { getPlantColorByIndex, getXPIncreaseByIndex } from "./plant.ts";
 import { type GameSettings } from "./externalDSLParser.ts";
