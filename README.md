@@ -1,5 +1,5 @@
 # cmpm-121-final devlogs
-##Devlog Entry - 12/9/24
+## Devlog Entry - F3 - 12/9/24
 ### How we satisfied the software requirements.
  #### F0+F1+F2
  No major changes were made to any of the F0 F1 or F2 requirements.
@@ -37,7 +37,7 @@ export function to_current_language(key: string) {
  ## Reflection
  Since in F2 we tried to make our game look better by including several emojis to prevent our game from being a giant wall of text, we had to go back on that and make some of the back into text to ensure we showed enough internationalization and localization. We were planning on using React Pixi typescript because there are many different libraries to use that would have made F3 easier, but decided against it because there are still many libraries in Deno typescript. This made it slightly more difficult, but was a better choice than changing our language entirely.
 
-##Devlog Entry - 12/9/24
+## Devlog Entry - F2 - 12/9/24
 ### How we satisfied the software requirements.
 #### F0 + F1
  No major changes were made to any of the F0 or F1 requirements.
@@ -118,7 +118,7 @@ We did not end up implementing this part of the project. We attempted to convert
 ## Reflection
 When we first started this project, we were going to use Unity and convert to Godot. We were talked out of that, and used Deno Typescript and were planning to swap to React + Pixi Typescript. That plan fell apart when we realized how vastly different React is from base Typescript, and how little we knew about React. Thus, we made the group decision to not change languages. In retrospect, we should have put more research into the many options we considered so that our project could successfully undergo a langauge change. In the end we were happy with what we could accomplish with just Deno and Typescript, though we are a bit disappointed in ourselves for not preparing ahead of time. Our game looks slightly more polished now since we added more colors, and used emojis to not have a giant wall of text given to the player. We hope that the colors more effectively communicate the different types of plants in our game.
 
-##Devlog Entry - 12/5/24
+## Devlog Entry - F1 - 12/5/24
 ### How we satisfied the software requirements.
  - F0.a - same as last week
  - F0.b - same as last week
@@ -136,7 +136,7 @@ When we first started this project, we were going to use Unity and convert to Go
 ### Reflection
 We retroactively redefined the properties of a boardTile to accommodate for the AoS format. For example, we had to remove plantColor and calculate its color upon creation using plantName to make space for other information. This was key to saving data because when serialized, strings take up a lot more space than numbers. While it took a lot of work going through all of our different files in order to accomodate this change, we are glad that we made this change. The biggest takeaway from this is that we had many variables that we didn't actually *need* when we could repurpose the variables we already had to have multiple different uses.
 
-## Devlog Entry - 12/2/24
+## Devlog Entry - F0 - 12/2/24
 ### How we satisfied the software requirements.
 Our character (the black square) can move over a 2D grid by using either WASD or the arrow keys. Time gets advanced by the user pressing a button marked as "advance time" below the grid. When the character is standing on a tile, the space bar will allow a plant to be planted. If a plant is already on that square, then the plant gets harvested. Sun is randomly generated each turn on a tile, but water gets randomly assigned in the beginning of the game before being updated based on the water of adjacent tiles each turn. There are 3 plants which can be selected by pressing a button for each plant, and the sizes of the plants change based on their growth levels. In order to grow, plants are assigned XP points each turn based on their incoming sunlight and water levels, with the water level being determined by spatial rules. The game is decided to be won when the player has 10 or more plants at level 3.
 
