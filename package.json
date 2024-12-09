@@ -1,15 +1,7 @@
 {
   "dependencies": {
-    "@iarna/toml": "^2.2.5",
-    "toml": "^3.0.0",
-    "toml-js": "^0.0.8"
-  },
-  "browserslist": [
-    "last 2 versions",
-    "not dead",
-    "chrome >= 91",
-    "firefox >= 91",
-    "edge >= 91",
-    "safari >= 15.4"
-  ]
+    "@pixi/react": "^7.1.2",
+    "@types/pixi.js": "^5.0.0",
+    "pixi.js": "^8.6.3"
+  }
 }
