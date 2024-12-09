@@ -3,7 +3,7 @@ import React, {useState, useEffect} from 'react';
 import BoardContext from './BoardContext';
 import Position from './position';
 import { BoardTile } from './boardTile';
-
+import { Graphics } from '@pixi/react';
 function Plant({ position}) { // fix later not reading position type?
     const { tile } = React.useContext(BoardContext);
     // obtain the tileinformation to grow plant
@@ -31,15 +31,13 @@ function Plant({ position}) { // fix later not reading position type?
 
 
     return (
-        <div className="plant">
-            <Sprite
-                image="/pixi-react/img/coin.png"
-                scale={{ x: 0.5, y: 0.5 }}
-                anchor={0.5}
-                x={position.x}
-                y={position.y}
-            />
-        </div>
+        <Graphics
+            draw={g => {
+            g.beginFill(0xffd900);
+            g.drawRect(position.x, position.y, 50, 50);
+            g.endFill();
+         }}
+        />
     )
 }
 

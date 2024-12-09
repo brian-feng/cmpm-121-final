@@ -150,7 +150,6 @@ export function saveGame(board: BoardTile[], fileNumber: number): void {
 
 export function loadGame(
   fileNumber: number,
-  canvas: HTMLCanvasElement,
   gameSettings: GameSettings,
 ): BoardTile[] {
   index = parseInt(
@@ -181,7 +180,6 @@ export function loadGame(
 
 export function undo(
   fileNumber: number,
-  canvas: HTMLCanvasElement,
   gameSettings: GameSettings,
 ): BoardTile[] {
   if (index <= 0) {
@@ -192,12 +190,11 @@ export function undo(
     "saveData" + fileNumber.toString() + ".index",
     index.toString(),
   );
-  return loadGame(fileNumber, canvas, gameSettings);
+  return loadGame(fileNumber, gameSettings);
 }
 
 export function redo(
   fileNumber: number,
-  canvas: HTMLCanvasElement,
   gameSettings: GameSettings,
 ): BoardTile[] {
   if (
@@ -210,7 +207,7 @@ export function redo(
       "saveData" + fileNumber.toString() + ".index",
       index.toString(),
     );
-    return loadGame(fileNumber, canvas, gameSettings);
+    return loadGame(fileNumber, gameSettings);
   }
   return [];
 }

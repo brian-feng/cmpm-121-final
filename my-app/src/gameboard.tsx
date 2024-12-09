@@ -20,22 +20,22 @@ function GameBoard({gameSettings}: {gameSettings: GameSettings}) {
     };
 
     const load = (fileNumber: number) => {
-        const loadedTiles = loadGame(fileNumber, canvasRef.current!, gameSettings);
+        const loadedTiles = loadGame(fileNumber, gameSettings);
         setTiles(loadedTiles);
     };
 
     const handleRedo = () => {
-        setTiles((prevTiles) => redo(fileNumber, canvasRef.current!, gameSettings));
+        setTiles((prevTiles) => redo(fileNumber, gameSettings));
     };
 
     const handleUndo = () => {
-        setTiles((prevTiles) => undo(fileNumber, canvasRef.current!, gameSettings));
+        setTiles((prevTiles) => undo(fileNumber, gameSettings));
     };
     const canvaswidth = 800;
-  const canvasheight = 600;
-  const WIDTH = 50;
-  const HEIGHT = 50;
-  useEffect(() => {
+    const canvasheight = 600;
+    const WIDTH = 50;
+    const HEIGHT = 50;
+    useEffect(() => {
         const newTiles: BoardTile[] = [];
         let index = 0;
         for (let i = 0; i < canvaswidth; i+=WIDTH) {
@@ -61,15 +61,15 @@ function GameBoard({gameSettings}: {gameSettings: GameSettings}) {
       }, [canvaswidth, canvasheight])
   return (
     <div>
-      {/* <button onClick={() => save(1)}>Save Game</button>
+      <button onClick={() => save(1)}>Save Game</button>
       <button onClick={() => load(1)}>Load Game</button>
-        <button onClick={handleUndo}>Undo</button> */}
-        {/* <button onClick={handleRedo}>Redo</button> */}
-    <button>Save Game</button>
+        <button onClick={handleUndo}>Undo</button>
+     <button onClick={handleRedo}>Redo</button>
+    {/* <button>Save Game</button>
     <button>Load Game</button>
     <button>Undo</button>
     <button>Redo</button>
-      
+       */}
       <Board boardTiles={tiles}></Board>
     </div>
   )
